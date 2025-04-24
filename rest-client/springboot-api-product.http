@@ -1,0 +1,45 @@
+@hostname = localhost
+@port = 8080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+### index
+GET http://{{host}}/api/v1/product HTTP/1.1
+
+### show
+GET http://{{host}}/api/v1/product/22 HTTP/1.1
+
+### show by category id
+GET http://{{host}}/api/v1/product/category/19 HTTP/1.1
+
+###
+POST http://{{host}}/api/v1/product HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "category_id": 1,
+    "name": "Coach",
+    "description": "Coach",
+    "brand": "Coach",
+    "model": "Coach",
+    "unit_price": 99
+}
+
+### update
+
+PUT  http://{{host}}/api/v1/product/1 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "category_id": 77,
+    "name": "foobarxss",
+    "description": "foobarxsss",
+    "brand": "foobarxss",
+    "model": "foobarxxx",
+    "unit_price": 14.50
+}
+
+### delete
+
+DELETE  http://{{host}}/api/v1/product/14 HTTP/1.1
+

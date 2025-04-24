@@ -1,0 +1,40 @@
+@hostname = localhost
+@port = 8080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+### index
+GET http://{{host}}/api/v1/user HTTP/1.1
+
+### show
+GET http://{{host}}/api/v1/user/99 HTTP/1.1
+
+###
+POST http://{{host}}/api/v1/user HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "email": "111@111.com",
+    "password": "password",
+    "name": "111",
+    "phone": "111",
+    "address": "111"
+}
+
+### update
+
+PUT  http://{{host}}/api/v1/user/1 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "email": "user@user.com",
+    "password": "passwordxxx",
+    "name": "namexxx",
+    "phone": "namexxx",
+    "address": "addressxxx"
+}
+
+### delete
+
+DELETE  http://{{host}}/api/v1/user/14 HTTP/1.1
+

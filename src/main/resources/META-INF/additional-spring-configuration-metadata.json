@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "application.openapi.description",
+    "type": "java.lang.String",
+    "description": "OpenAPI description"
+  },
+  {
+    "name": "application.openapi.version",
+    "type": "java.lang.String",
+    "description": "OpenAPI version"
+  },
+  {
+    "name": "application.openapi.title",
+    "type": "java.lang.String",
+    "description": "OpenAPI title"
+  },
+  {
+    "name": "app.datasource.url",
+    "type": "java.lang.String",
+    "description": "Datasource URL"
+  },
+  {
+    "name": "app.datasource.username",
+    "type": "java.lang.String",
+    "description": "Datasource username"
+  },
+  {
+    "name": "app.datasource.password",
+    "type": "java.lang.String",
+    "description": "Datasource password"
+  },
+  {
+    "name": "app.datasource.driverclassname",
+    "type": "java.lang.String",
+    "description": "A description for 'app.datasource.driverClassName'"
+  }
+]}

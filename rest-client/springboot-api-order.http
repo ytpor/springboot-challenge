@@ -1,0 +1,49 @@
+@hostname = localhost
+@port = 8080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+### index
+
+GET http://{{host}}/api/v1/order HTTP/1.1
+
+### show
+GET http://{{host}}/api/v1/order/13 HTTP/1.1
+
+### array
+POST http://{{host}}/api/v1/order HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "user_id": 1,
+    "products": [
+        {
+            "product_id": 1,
+            "quantity": 2
+        }
+    ]
+}
+
+### update status
+
+PUT  http://{{host}}/api/v1/order/status/4 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "status": "status"
+}
+
+### update rating
+
+PUT  http://{{host}}/api/v1/order/product-rating/4?rating=2 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "product_id": 1,
+    "rating": 5
+}
+
+### delete
+
+DELETE  http://{{host}}/api/v1/order/14 HTTP/1.1
+

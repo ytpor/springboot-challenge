@@ -44,6 +44,7 @@ public class ItemAttributeController {
 
     @PostMapping
     @Operation(summary = "Add item attribute", description = "Add an item attribute")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ItemAttribute> createItemAttribute(@Valid @RequestBody ItemAttributeCreateDTO createDTO) {
         return new ResponseEntity<>(itemAttributeService.createItemAttribute(createDTO), HttpStatus.CREATED);
     }
@@ -57,6 +58,7 @@ public class ItemAttributeController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete item attribute", description = "Delete an item attribute")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteItemAttribute(@PathVariable long id) {
         itemAttributeService.deleteItemAttribute(id);
         return ResponseEntity.noContent().build();

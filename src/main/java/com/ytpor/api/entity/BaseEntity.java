@@ -1,11 +1,13 @@
 package com.ytpor.api.entity;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(BaseEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     public LocalDateTime createdAt;

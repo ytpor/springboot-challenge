@@ -26,7 +26,7 @@ public class ItemAttributeService {
         return itemAttributeRepository.findAll(pageable);
     }
 
-    public ItemAttribute getItemAttributeById(long id) {
+    public ItemAttribute getOneItemAttribute(long id) {
         return itemAttributeRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Item attribute not found for id: " + id));
     }

@@ -4,10 +4,13 @@
 @contentType = application/json
 
 ### index
-GET http://{{host}}/api/v1/attribute?sort=id,desc HTTP/1.1
+GET http://{{host}}/api/v1/attribute HTTP/1.1
+
+### index
+GET http://{{host}}/api/v1/attribute?page=0&size=5&sort=id,desc HTTP/1.1
 
 ### show
-GET http://{{host}}/api/v1/attribute/22 HTTP/1.1
+GET http://{{host}}/api/v1/attribute/1 HTTP/1.1
 
 ###
 POST http://{{host}}/api/v1/attribute HTTP/1.1
@@ -20,7 +23,7 @@ Content-Type: {{contentType}}
 
 ### update
 
-PATCH  http://{{host}}/api/v1/attribute/15 HTTP/1.1
+PATCH  http://{{host}}/api/v1/attribute/1 HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -30,5 +33,5 @@ Content-Type: {{contentType}}
 
 ### delete
 
-DELETE  http://{{host}}/api/v1/attribute/14 HTTP/1.1
+DELETE  http://{{host}}/api/v1/attribute/1 HTTP/1.1
 

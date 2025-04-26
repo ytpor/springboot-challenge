@@ -38,8 +38,8 @@ public class ItemAttributeController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get item attribute", description = "Retrieve an item attribute")
-    public ResponseEntity<ItemAttribute> getItemAttributeById(@PathVariable long id) {
-        return ResponseEntity.ok(itemAttributeService.getItemAttributeById(id));
+    public ResponseEntity<ItemAttribute> getOneItemAttribute(@PathVariable long id) {
+        return ResponseEntity.ok(itemAttributeService.getOneItemAttribute(id));
     }
 
     @PostMapping

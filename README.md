@@ -40,6 +40,12 @@ Navigate to the folder with `build.gradle`.
 ./gradlew bootRun
 ```
 
+```
+# Build and run
+./gradlew build
+java -jar ./build/libs/springboot-challenge-0.0.1-SNAPSHOT.jar
+```
+
 You can then access the API documentation through the following URL:
 
 ```

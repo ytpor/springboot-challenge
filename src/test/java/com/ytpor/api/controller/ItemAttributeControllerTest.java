@@ -2,10 +2,12 @@ package com.ytpor.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ytpor.api.entity.ItemAttribute;
-import com.ytpor.api.repository.ItemAttributeRepository;
+import com.ytpor.api.exception.RecordNotFoundException;
+import com.ytpor.api.model.ItemAttributeCreateDTO;
+import com.ytpor.api.model.ItemAttributeUpdateDTO;
+import com.ytpor.api.service.ItemAttributeService;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,14 +39,19 @@ class ItemAttributeControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private ItemAttributeRepository itemRepository;
+    private ItemAttributeService itemService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    private ItemAttribute itemAttribute;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        itemAttribute = new ItemAttribute();
+        itemAttribute.setId(1L);
+        itemAttribute.setName("Test ItemAttribute");
     }
 
     @Test
@@ -51,7 +59,7 @@ class ItemAttributeControllerTest {
         List<ItemAttribute> itemAttributes = Arrays.asList(new ItemAttribute(), new ItemAttribute());
         Page<ItemAttribute> itemAttributePage = new PageImpl<>(itemAttributes);
 
-        when(itemRepository.findAll(any(Pageable.class))).thenReturn(itemAttributePage);
+        when(itemService.getAllItemAttributes(any(Pageable.class))).thenReturn(itemAttributePage);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute")
                 .param("page", "0")
@@ -63,50 +71,48 @@ class ItemAttributeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").value(1));
 
-        verify(itemRepository, times(1)).findAll(any(Pageable.class));
+        verify(itemService, times(1)).getAllItemAttributes(any(Pageable.class));
     }
 
     @Test
-    void testGetItemAttributeById() throws Exception {
-        ItemAttribute item = new ItemAttribute();
-        item.setId(1L);
-        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+    void testGetOneItemAttribute() throws Exception {
+        when(itemService.getOneItemAttribute(1L)).thenReturn(itemAttribute);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
 
-        verify(itemRepository, times(1)).findById(1L);
+        verify(itemService, times(1)).getOneItemAttribute(1L);
     }
 
     @Test
-    void testGetItemAttributeByIdNotFound() throws Exception {
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
+    void testGetOneItemAttributeNotFound() throws Exception {
+        when(itemService.getOneItemAttribute(anyLong())).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
 
-        verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemService, times(1)).getOneItemAttribute(anyLong());
     }
 
     @Test
     void testCreateItemAttribute() throws Exception {
-        ItemAttribute newItemAttribute = new ItemAttribute();
-        newItemAttribute.setId(1L);
-        newItemAttribute.setName("Test ItemAttribute");
+        ItemAttributeCreateDTO createDTO = new ItemAttributeCreateDTO();
+        createDTO.setName("Test ItemAttribute");
 
-        when(itemRepository.save(any(ItemAttribute.class))).thenReturn(newItemAttribute);
+        when(itemService.createItemAttribute(any(ItemAttributeCreateDTO.class))).thenReturn(itemAttribute);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/attribute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newItemAttribute)))
+                .content(objectMapper.writeValueAsString(createDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test ItemAttribute"));
 
-        verify(itemRepository, times(1)).save(any(ItemAttribute.class));
+        verify(itemService, times(1)).createItemAttribute(any(ItemAttributeCreateDTO.class));
     }
 
     @Test
@@ -118,21 +124,18 @@ class ItemAttributeControllerTest {
 
     @Test
     void testUpdateItemAttribute() throws Exception {
-        ItemAttribute newItemAttribute = new ItemAttribute();
-        newItemAttribute.setId(1L);
-        newItemAttribute.setName("Updated ItemAttribute");
+        ItemAttributeUpdateDTO updateDTO = new ItemAttributeUpdateDTO();
+        updateDTO.setName("Test ItemAttribute");
 
-        when(itemRepository.findById(1L)).thenReturn(Optional.of(new ItemAttribute()));
-        when(itemRepository.save(any(ItemAttribute.class))).thenReturn(newItemAttribute);
+        when(itemService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenReturn(itemAttribute);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newItemAttribute)))
+                .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Updated ItemAttribute"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test ItemAttribute"));
 
-        verify(itemRepository, times(1)).findById(1L);
-        verify(itemRepository, times(1)).save(any(ItemAttribute.class));
+        verify(itemService, times(1)).updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class));
     }
 
     @Test
@@ -143,38 +146,35 @@ class ItemAttributeControllerTest {
 
     @Test
     void testUpdateItemAttributeNotFound() throws Exception {
-        ItemAttribute newItemAttribute = new ItemAttribute();
-        newItemAttribute.setId(1L);
-        newItemAttribute.setName("Updated ItemAttribute");
-
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(itemService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newItemAttribute)))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .content(objectMapper.writeValueAsString(itemAttribute)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
 
-        verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemService, times(1)).updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class));
     }
 
     @Test
     void testDeleteItemAttribute() throws Exception {
-        when(itemRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(itemService).deleteItemAttribute(anyLong());
 
-        doNothing().when(itemRepository).deleteById(1L);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        verify(itemRepository, times(1)).existsById(1L);
+        verify(itemService, times(1)).deleteItemAttribute(anyLong());
     }
 
     @Test
     void testDeleteItemAttributeNotFound() throws Exception {
-        when(itemRepository.existsById(1L)).thenReturn(false);
+        doThrow(new RecordNotFoundException("Item Attribute not found.")).when(itemService).deleteItemAttribute(anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/attribute/1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
 
-        verify(itemRepository, times(1)).existsById(1L);
+        verify(itemService, times(1)).deleteItemAttribute(anyLong());
     }
 }

@@ -1,6 +1,5 @@
 package com.ytpor.api.service;
 
-import com.ytpor.api.entity.Category;
 import com.ytpor.api.entity.ItemAttribute;
 import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
@@ -21,7 +20,7 @@ public class ItemAttributeService {
     private static final String ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE = "Item attribute not found for id: ";
     private static final String NAME_IN_USE = "Name already in use: {}";
     private static final String NAME_IN_USE_MESSAGE = "Name already in use. Please use a different name.";
-    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ItemAttributeService.class);
 
     private final ItemAttributeRepository itemAttributeRepository;
 

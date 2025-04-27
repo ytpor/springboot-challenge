@@ -99,25 +99,6 @@ class CategoryServiceTest {
     }
 
     @Test
-    void testDeleteCategory_Success() {
-        when(categoryRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(categoryRepository).deleteById(1L);
-
-        categoryService.deleteCategory(1L);
-
-        verify(categoryRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void testDeleteCategory_NotFound() {
-        when(categoryRepository.existsById(1L)).thenReturn(false);
-
-        assertThatThrownBy(() -> categoryService.deleteCategory(1L))
-                .isInstanceOf(RecordNotFoundException.class)
-                .hasMessageContaining("Category not found");
-    }
-
-    @Test
     void testUpdateCategory_Success() {
         CategoryUpdateDTO updateDTO = new CategoryUpdateDTO();
         updateDTO.setName("Updated Electronics");
@@ -155,5 +136,24 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.updateCategory(1L, updateDTO))
                 .isInstanceOf(DuplicateRecordException.class)
                 .hasMessageContaining("Name already in use");
+    }
+
+    @Test
+    void testDeleteCategory_Success() {
+        when(categoryRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(categoryRepository).deleteById(1L);
+
+        categoryService.deleteCategory(1L);
+
+        verify(categoryRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteCategory_NotFound() {
+        when(categoryRepository.existsById(1L)).thenReturn(false);
+
+        assertThatThrownBy(() -> categoryService.deleteCategory(1L))
+                .isInstanceOf(RecordNotFoundException.class)
+                .hasMessageContaining("Category not found");
     }
 }

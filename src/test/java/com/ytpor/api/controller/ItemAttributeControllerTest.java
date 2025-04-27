@@ -87,7 +87,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
-    void testGetOneItemAttributeNotFound() throws Exception {
+    void testGetOneItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.getOneItemAttribute(anyLong())).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute/1")
@@ -116,7 +116,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
-    void testCreateItemAttributeNoContent() throws Exception {
+    void testCreateItemAttribute_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/attribute")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -139,13 +139,13 @@ class ItemAttributeControllerTest {
     }
 
     @Test
-    void testUpdateItemAttributeNoContent() throws Exception {
+    void testUpdateItemAttribute_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
-    void testUpdateItemAttributeNotFound() throws Exception {
+    void testUpdateItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1")
@@ -168,7 +168,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
-    void testDeleteItemAttributeNotFound() throws Exception {
+    void testDeleteItemAttribute_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Item Attribute not found.")).when(itemAttributeService).deleteItemAttribute(anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/attribute/1"))

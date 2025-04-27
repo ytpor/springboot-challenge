@@ -99,25 +99,6 @@ class ItemAttributeServiceTest {
     }
 
     @Test
-    void testDeleteItemAttribute_Success() {
-        when(itemAttributeRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(itemAttributeRepository).deleteById(1L);
-
-        itemAttributeService.deleteItemAttribute(1L);
-
-        verify(itemAttributeRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void testDeleteItemAttribute_NotFound() {
-        when(itemAttributeRepository.existsById(1L)).thenReturn(false);
-
-        assertThatThrownBy(() -> itemAttributeService.deleteItemAttribute(1L))
-                .isInstanceOf(RecordNotFoundException.class)
-                .hasMessageContaining("Item attribute not found");
-    }
-
-    @Test
     void testUpdateItemAttribute_Success() {
         ItemAttributeUpdateDTO updateDTO = new ItemAttributeUpdateDTO();
         updateDTO.setName("Updated Name");
@@ -155,5 +136,24 @@ class ItemAttributeServiceTest {
         assertThatThrownBy(() -> itemAttributeService.updateItemAttribute(1L, updateDTO))
                 .isInstanceOf(DuplicateRecordException.class)
                 .hasMessageContaining("Name already in use");
+    }
+
+    @Test
+    void testDeleteItemAttribute_Success() {
+        when(itemAttributeRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(itemAttributeRepository).deleteById(1L);
+
+        itemAttributeService.deleteItemAttribute(1L);
+
+        verify(itemAttributeRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteItemAttribute_NotFound() {
+        when(itemAttributeRepository.existsById(1L)).thenReturn(false);
+
+        assertThatThrownBy(() -> itemAttributeService.deleteItemAttribute(1L))
+                .isInstanceOf(RecordNotFoundException.class)
+                .hasMessageContaining("Item attribute not found");
     }
 }

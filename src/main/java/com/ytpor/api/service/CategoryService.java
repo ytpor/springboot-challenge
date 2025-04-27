@@ -49,14 +49,6 @@ public class CategoryService {
     }
 
     @CacheEvict(value="Category", allEntries=true)
-    public void deleteCategory(long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new RecordNotFoundException("Category not found for id: " + id);
-        }
-        categoryRepository.deleteById(id);
-    }
-
-    @CacheEvict(value="Category", allEntries=true)
     @CachePut(value="Category", key="#id")
     public Category updateCategory(long id, CategoryUpdateDTO updateDTO) {
         try {
@@ -72,5 +64,13 @@ public class CategoryService {
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateRecordException("Name already in use. Please use a different name.");
         }
+    }
+
+    @CacheEvict(value="Category", allEntries=true)
+    public void deleteCategory(long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new RecordNotFoundException("Category not found for id: " + id);
+        }
+        categoryRepository.deleteById(id);
     }
 }

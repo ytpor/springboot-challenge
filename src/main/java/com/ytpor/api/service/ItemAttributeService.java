@@ -42,13 +42,6 @@ public class ItemAttributeService {
         }
     }
 
-    public void deleteItemAttribute(long id) {
-        if (!itemAttributeRepository.existsById(id)) {
-            throw new RecordNotFoundException("Item attribute not found for id: " + id);
-        }
-        itemAttributeRepository.deleteById(id);
-    }
-
     public ItemAttribute updateItemAttribute(long id, ItemAttributeUpdateDTO updateDTO) {
         try {
             return itemAttributeRepository.findById(id).map(itemAttribute -> {
@@ -63,5 +56,12 @@ public class ItemAttributeService {
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateRecordException("Name already in use. Please use a different name.");
         }
+    }
+
+    public void deleteItemAttribute(long id) {
+        if (!itemAttributeRepository.existsById(id)) {
+            throw new RecordNotFoundException("Item attribute not found for id: " + id);
+        }
+        itemAttributeRepository.deleteById(id);
     }
 }

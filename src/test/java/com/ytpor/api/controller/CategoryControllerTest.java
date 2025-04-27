@@ -87,7 +87,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void testGetOneCategoryNotFound() throws Exception {
+    void testGetOneCategory_NotFound() throws Exception {
         when(categoryService.getOneCategory(anyLong())).thenThrow(new RecordNotFoundException("Category not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/category/1")
@@ -116,7 +116,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void testCreateCategoryNoContent() throws Exception {
+    void testCreateCategory_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/category")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -139,13 +139,13 @@ class CategoryControllerTest {
     }
 
     @Test
-    void testUpdateCategoryNoContent() throws Exception {
+    void testUpdateCategory_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/category/1"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
-    void testUpdateCategoryNotFound() throws Exception {
+    void testUpdateCategory_NotFound() throws Exception {
         when(categoryService.updateCategory(anyLong(), any(CategoryUpdateDTO.class))).thenThrow(new RecordNotFoundException("Category not found."));
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/category/1")
@@ -168,7 +168,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void testDeleteCategoryNotFound() throws Exception {
+    void testDeleteCategory_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Category not found.")).when(categoryService).deleteCategory(anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/category/1"))

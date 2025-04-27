@@ -1,11 +1,14 @@
 package com.ytpor.api.service;
 
+import com.ytpor.api.entity.Category;
 import com.ytpor.api.entity.ItemAttribute;
 import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
 import com.ytpor.api.model.ItemAttributeCreateDTO;
 import com.ytpor.api.model.ItemAttributeUpdateDTO;
 import com.ytpor.api.repository.ItemAttributeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ItemAttributeService {
 
-    // Declare the repository as final to ensure its immutability
+    private static final String ITEM_ATTRIBUTE_NOT_FOUND = "Item attribute not found for id: {}";
+    private static final String ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE = "Item attribute not found for id: ";
+    private static final String NAME_IN_USE = "Name already in use: {}";
+    private static final String NAME_IN_USE_MESSAGE = "Name already in use. Please use a different name.";
+    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+
     private final ItemAttributeRepository itemAttributeRepository;
 
-    // Use constructor-based dependency injection
     public ItemAttributeService(ItemAttributeRepository itemAttributeRepository) {
         this.itemAttributeRepository = itemAttributeRepository;
     }
@@ -28,39 +35,51 @@ public class ItemAttributeService {
 
     public ItemAttribute getOneItemAttribute(long id) {
         return itemAttributeRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("Item attribute not found for id: " + id));
+                .orElseThrow(() -> {
+                    logger.error(ITEM_ATTRIBUTE_NOT_FOUND, id);
+                    return new RecordNotFoundException(ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE + id);
+                });
     }
 
     public ItemAttribute createItemAttribute(ItemAttributeCreateDTO createDTO) {
+        ItemAttribute itemAttribute = new ItemAttribute();
+        itemAttribute.setName(createDTO.getName());
+        itemAttribute.setDescription(createDTO.getDescription());
+
         try {
-            ItemAttribute itemAttribute = new ItemAttribute();
-            itemAttribute.setName(createDTO.getName());
-            itemAttribute.setDescription(createDTO.getDescription());
             return itemAttributeRepository.save(itemAttribute);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateRecordException("Name already in use. Please use a different name.");
+            logger.error(NAME_IN_USE, createDTO.getName());
+            throw new DuplicateRecordException(NAME_IN_USE_MESSAGE);
         }
     }
 
     public ItemAttribute updateItemAttribute(long id, ItemAttributeUpdateDTO updateDTO) {
+        ItemAttribute itemAttribute = itemAttributeRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error(ITEM_ATTRIBUTE_NOT_FOUND, id);
+                    return new RecordNotFoundException(ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE + id);
+                });
+
+        if (updateDTO.getName() != null) {
+            itemAttribute.setName(updateDTO.getName());
+        }
+        if (updateDTO.getDescription() != null) {
+            itemAttribute.setDescription(updateDTO.getDescription());
+        }
+
         try {
-            return itemAttributeRepository.findById(id).map(itemAttribute -> {
-                if (updateDTO.getName() != null) {
-                    itemAttribute.setName(updateDTO.getName());
-                }
-                if (updateDTO.getDescription() != null) {
-                    itemAttribute.setDescription(updateDTO.getDescription());
-                }
-                return itemAttributeRepository.save(itemAttribute);
-            }).orElseThrow(() -> new RecordNotFoundException("Item attribute not found for id: " + id));
+            return itemAttributeRepository.save(itemAttribute);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateRecordException("Name already in use. Please use a different name.");
+            logger.error(NAME_IN_USE, updateDTO.getName());
+            throw new DuplicateRecordException(NAME_IN_USE_MESSAGE);
         }
     }
 
     public void deleteItemAttribute(long id) {
         if (!itemAttributeRepository.existsById(id)) {
-            throw new RecordNotFoundException("Item attribute not found for id: " + id);
+            logger.error(ITEM_ATTRIBUTE_NOT_FOUND, id);
+            throw new RecordNotFoundException(ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE + id);
         }
         itemAttributeRepository.deleteById(id);
     }

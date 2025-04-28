@@ -42,6 +42,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(MissingRequestBodyException.class)
+    public final ResponseEntity<Object> handleMissingRequestBodyException(MissingRequestBodyException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Missing Request Body", details);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
     @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {

@@ -1,6 +1,7 @@
 package com.ytpor.api.controller;
 
 import com.ytpor.api.entity.ItemAttribute;
+import com.ytpor.api.exception.MissingRequestBodyException;
 import com.ytpor.api.model.ItemAttributeCreateDTO;
 import com.ytpor.api.model.ItemAttributeUpdateDTO;
 import com.ytpor.api.service.ItemAttributeService;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/attribute")
 @Tag(name = "Attribute")
 public class ItemAttributeController {
+
+    private static final String REQUEST_BODY_MISSING = "Request body is missing.";
 
     // Declare the service as final to ensure its immutability
     private final ItemAttributeService itemAttributeService;
@@ -45,14 +48,20 @@ public class ItemAttributeController {
     @PostMapping
     @Operation(summary = "Add item attribute", description = "Add an item attribute")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ItemAttribute> createItemAttribute(@Valid @RequestBody ItemAttributeCreateDTO createDTO) {
+    public ResponseEntity<ItemAttribute> createItemAttribute(@Valid @RequestBody(required = false) ItemAttributeCreateDTO createDTO) {
+        if (createDTO == null) {
+            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
+        }
         return new ResponseEntity<>(itemAttributeService.createItemAttribute(createDTO), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update item attribute", description = "Update an item attribute")
     public ResponseEntity<ItemAttribute> updateItemAttribute(@PathVariable long id,
-            @RequestBody ItemAttributeUpdateDTO updateDTO) {
+            @RequestBody(required = false) ItemAttributeUpdateDTO updateDTO) {
+        if (updateDTO == null) {
+            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
+        }
         return ResponseEntity.ok(itemAttributeService.updateItemAttribute(id, updateDTO));
     }
 

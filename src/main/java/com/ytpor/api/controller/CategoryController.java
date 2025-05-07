@@ -1,6 +1,7 @@
 package com.ytpor.api.controller;
 
 import com.ytpor.api.entity.Category;
+import com.ytpor.api.exception.MissingRequestBodyException;
 import com.ytpor.api.model.CategoryCreateDTO;
 import com.ytpor.api.model.CategoryUpdateDTO;
 import com.ytpor.api.service.CategoryService;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/category")
 @Tag(name = "Category")
 public class CategoryController {
+
+    private static final String REQUEST_BODY_MISSING = "Request body is missing.";
 
     // Declare the service as final to ensure its immutability
     private final CategoryService categoryService;
@@ -45,14 +48,20 @@ public class CategoryController {
     @PostMapping
     @Operation(summary = "Add category", description = "Add an category")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryCreateDTO createDTO) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody(required = false) CategoryCreateDTO createDTO) {
+        if (createDTO == null) {
+            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
+        }
         return new ResponseEntity<>(categoryService.createCategory(createDTO), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update category", description = "Update an category")
     public ResponseEntity<Category> updateCategory(@PathVariable long id,
-            @RequestBody CategoryUpdateDTO updateDTO) {
+            @RequestBody(required = false) CategoryUpdateDTO updateDTO) {
+        if (updateDTO == null) {
+            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
+        }
         return ResponseEntity.ok(categoryService.updateCategory(id, updateDTO));
     }
 

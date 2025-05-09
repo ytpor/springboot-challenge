@@ -10,30 +10,12 @@ The challenge is to develop some backend APIs.
 
 ## Get started
 
-Create and store configuration in `/etc/profile.d` so that it will be executed when a new shell session starts.
+* Clone this repository
+* Change directory into the newly cloned repository
+* Make a copy of `.env.example`, and name it `.env`.
+* Edit the content of `.env` with your environment in mind.
 
-```
-cd /etc/profile.d
-sudo touch springboot_challenge.sh
-sudo chmod +x springboot_challenge.sh
-```
-
-The content of `springboot_challenge.sh` would look like this. Change the values according to your environment.
-
-```
-# JASYPT
-export SBC_JASYPT_ENCRYPTOR_PASSWORD=password
-# MySQL
-export SBC_MYSQL_DB_URL=jdbc:mysql://127.0.0.1:3306/challenge_db
-export SBC_MYSQL_DB_USERNAME=username
-export SBC_MYSQL_DB_PASSWORD=ENCRYPTED_STRING
-# Redis
-export SBC_REDIS_HOST=localhost
-export SBC_REDIS_PORT=6379
-export SBC_REDIS_PASSWORD=ENCRYPTED_STRING # Remove line if Redis has no password
-```
-
-**NOTE** Use [Jasypt Encryption and Decryption Online](https://www.devglan.com/online-tools/jasypt-online-encryption-decryption) to encrypt the MySQL and Redis passwords, and store the encrypted string to `SBC_MYSQL_DB_PASSWORD` and `SBC_REDIS_PASSWORD`.
+**NOTE** Clone [simple-jasypt](https://github.com/ytpor/simple-jasypt), and use it to encrypt the MySQL and Redis passwords, and store the encrypted string to `SBC_MYSQL_DB_PASSWORD` and `SBC_REDIS_PASSWORD`.
 
 ## Run the application
 

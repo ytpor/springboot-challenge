@@ -18,18 +18,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest()
@@ -55,9 +51,10 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetAllCategories() throws Exception {
-        List<Category> categoryies = Arrays.asList(new Category(), new Category());
-        Page<Category> categoryPage = new PageImpl<>(categoryies);
+        List<Category> categories = Arrays.asList(new Category(), new Category());
+        Page<Category> categoryPage = new PageImpl<>(categories);
 
         when(categoryService.getAllCategories(any(Pageable.class))).thenReturn(categoryPage);
 
@@ -75,6 +72,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetOneCategory() throws Exception {
         when(categoryService.getOneCategory(1L)).thenReturn(category);
 
@@ -87,6 +85,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetOneCategory_NotFound() throws Exception {
         when(categoryService.getOneCategory(anyLong())).thenThrow(new RecordNotFoundException("Category not found."));
 
@@ -99,6 +98,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateCategory() throws Exception {
         CategoryCreateDTO createDTO = new CategoryCreateDTO();
         createDTO.setName("Test Category");
@@ -116,6 +116,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateCategory_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/category")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -123,6 +124,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateCategory() throws Exception {
         CategoryUpdateDTO updateDTO = new CategoryUpdateDTO();
         updateDTO.setName("Test Category");
@@ -139,12 +141,14 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateCategory_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/category/1"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateCategory_NotFound() throws Exception {
         when(categoryService.updateCategory(anyLong(), any(CategoryUpdateDTO.class))).thenThrow(new RecordNotFoundException("Category not found."));
 
@@ -158,6 +162,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testDeleteCategory() throws Exception {
         doNothing().when(categoryService).deleteCategory(anyLong());
 
@@ -168,6 +173,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testDeleteCategory_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Category not found.")).when(categoryService).deleteCategory(anyLong());
 

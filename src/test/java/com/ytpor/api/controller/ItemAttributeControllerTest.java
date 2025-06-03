@@ -18,18 +18,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest()
@@ -55,6 +51,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetAllItemAttributes() throws Exception {
         List<ItemAttribute> itemAttributes = Arrays.asList(new ItemAttribute(), new ItemAttribute());
         Page<ItemAttribute> itemAttributePage = new PageImpl<>(itemAttributes);
@@ -75,6 +72,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetOneItemAttribute() throws Exception {
         when(itemAttributeService.getOneItemAttribute(1L)).thenReturn(itemAttribute);
 
@@ -87,6 +85,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetOneItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.getOneItemAttribute(anyLong())).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
@@ -99,6 +98,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateItemAttribute() throws Exception {
         ItemAttributeCreateDTO createDTO = new ItemAttributeCreateDTO();
         createDTO.setName("Test ItemAttribute");
@@ -116,6 +116,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateItemAttribute_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/attribute")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -123,6 +124,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateItemAttribute() throws Exception {
         ItemAttributeUpdateDTO updateDTO = new ItemAttributeUpdateDTO();
         updateDTO.setName("Test ItemAttribute");
@@ -139,12 +141,14 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateItemAttribute_NoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
@@ -158,6 +162,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testDeleteItemAttribute() throws Exception {
         doNothing().when(itemAttributeService).deleteItemAttribute(anyLong());
 
@@ -168,6 +173,7 @@ class ItemAttributeControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testDeleteItemAttribute_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Item Attribute not found.")).when(itemAttributeService).deleteItemAttribute(anyLong());
 

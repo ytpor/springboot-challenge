@@ -33,7 +33,7 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Get categories", description = "Retrieve a list of categories")
-    public ResponseEntity<Page<Category>> getAllCategorys(
+    public ResponseEntity<Page<Category>> getAllCategories(
             @ParameterObject @PageableDefault(size = 10, page = 0) Pageable pageable) {
         Page<Category> categories = categoryService.getAllCategories(pageable);
         return ResponseEntity.ok(categories);

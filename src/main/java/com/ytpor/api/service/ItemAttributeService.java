@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,14 @@ public class ItemAttributeService {
     }
 
     public Page<ItemAttribute> getAllItemAttributes(Pageable pageable) {
+        // Check if sort is empty and apply default sort
+        if (!pageable.getSort().isSorted()) {
+            pageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+            );
+        }
         return itemAttributeRepository.findAll(pageable);
     }
 

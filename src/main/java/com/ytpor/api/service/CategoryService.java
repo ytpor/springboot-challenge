@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -101,5 +102,10 @@ public class CategoryService {
             throw new RecordNotFoundException(CATEGORY_NOT_FOUND_MESSAGE + id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Kuala_Lumpur") // Run every minute
+    public void performDailyTask() {
+        logger.info("Performing daily task");
     }
 }

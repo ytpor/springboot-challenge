@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -91,5 +92,10 @@ public class ItemAttributeService {
             throw new RecordNotFoundException(ITEM_ATTRIBUTE_NOT_FOUND_MESSAGE + id);
         }
         itemAttributeRepository.deleteById(id);
+    }
+
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Kuala_Lumpur") // Run every minute
+    public void performDailyTask() {
+        logger.info("Performing daily task");
     }
 }

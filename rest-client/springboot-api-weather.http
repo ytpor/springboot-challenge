@@ -1,0 +1,17 @@
+@hostname = localhost
+@port = 8080
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+# @name login
+POST http://{{host}}/api/auth/token HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "username": "user",
+    "password": "user"
+}
+
+### show
+GET http://{{host}}/api/v1/weather/kuala_lumpur HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}

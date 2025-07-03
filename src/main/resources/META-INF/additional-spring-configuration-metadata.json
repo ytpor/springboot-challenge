@@ -18,5 +18,10 @@
     "name": "jwt.key",
     "type": "java.lang.String",
     "description": "JWT key"
+  },
+  {
+    "name": "weatherapi.key",
+    "type": "java.lang.String",
+    "description": "Weather API key"
   }
 ]}

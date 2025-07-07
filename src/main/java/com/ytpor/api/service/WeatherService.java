@@ -1,7 +1,7 @@
 package com.ytpor.api.service;
 
 import org.springframework.stereotype.Service;
-import com.ytpor.api.client.WeatherApiClient;
+import com.ytpor.api.component.WeatherApiClient;
 import com.ytpor.api.model.WeatherResponse;
 
 @Service

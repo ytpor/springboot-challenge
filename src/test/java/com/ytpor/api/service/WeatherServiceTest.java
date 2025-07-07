@@ -1,12 +1,13 @@
 package com.ytpor.api.service;
 
-import com.ytpor.api.component.WeatherApiClient;
+import com.ytpor.api.client.WeatherApiClient;
 import com.ytpor.api.model.WeatherResponse;
 import com.ytpor.api.model.WeatherResponse.Current;
 import com.ytpor.api.model.WeatherResponse.Current.Condition;
 import com.ytpor.api.model.WeatherResponse.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

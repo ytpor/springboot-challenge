@@ -1,4 +1,4 @@
-package com.ytpor.api.component;
+package com.ytpor.api.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

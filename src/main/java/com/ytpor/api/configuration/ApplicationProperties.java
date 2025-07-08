@@ -9,8 +9,15 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "application")
 public class ApplicationProperties {
 
+    private JWT jwt;
     private Openapi openapi;
     private RabbitMQ rabbitmq;
+    private WeatherApi weatherapi;
+
+    @Data
+    public static class JWT {
+        private String key;
+    }
 
     @Data
     public static class Openapi {
@@ -28,5 +35,10 @@ public class ApplicationProperties {
         private String queueItemAttributeKey;
         private boolean queueItemAttributeDurable;
         private String exchangeName;
+    }
+
+    @Data
+    public static class WeatherApi {
+        private String key;
     }
 }

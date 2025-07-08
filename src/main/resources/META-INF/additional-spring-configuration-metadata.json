@@ -1,5 +1,10 @@
 {"properties": [
   {
+    "name": "application.jwt.key",
+    "type": "java.lang.String",
+    "description": "JWT key"
+  },
+  {
     "name": "application.openapi.description",
     "type": "java.lang.String",
     "description": "OpenAPI description"
@@ -50,12 +55,7 @@
     "description": "RabbitMQ exchange name"
   },
   {
-    "name": "jwt.key",
-    "type": "java.lang.String",
-    "description": "JWT key"
-  },
-  {
-    "name": "weatherapi.key",
+    "name": "application.weatherapi.key",
     "type": "java.lang.String",
     "description": "Weather API key"
   }

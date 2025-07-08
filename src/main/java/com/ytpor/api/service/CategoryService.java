@@ -5,6 +5,7 @@ import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
 import com.ytpor.api.model.CategoryCreateDTO;
 import com.ytpor.api.model.CategoryUpdateDTO;
+import com.ytpor.api.model.MessageSend;
 import com.ytpor.api.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,5 +108,9 @@ public class CategoryService {
     @Scheduled(cron = "0 * * * * *", zone = "Asia/Kuala_Lumpur") // Run every minute
     public void performDailyTask() {
         logger.info("Performing daily task");
+    }
+
+    public void backgroundProcess(MessageSend message) {
+        logger.info("Performing background process {}", message);
     }
 }

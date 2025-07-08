@@ -7,6 +7,7 @@ The challenge is to develop some backend APIs.
 * Java 17
 * MySQL version 8.0.41 or higher
 * Redis version 7.4.1 or higher
+* RabbitMQ version 4.1.1 or higher
 
 ## Get started
 

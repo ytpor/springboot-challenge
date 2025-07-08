@@ -10,11 +10,23 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationProperties {
 
     private Openapi openapi;
+    private RabbitMQ rabbitmq;
 
     @Data
     public static class Openapi {
         private String title;
         private String description;
         private String version;
+    }
+
+    @Data
+    public static class RabbitMQ {
+        private String queueCategory;
+        private String queueCategoryKey;
+        private boolean queueCategoryDurable;
+        private String queueItemAttribute;
+        private String queueItemAttributeKey;
+        private boolean queueItemAttributeDurable;
+        private String exchangeName;
     }
 }

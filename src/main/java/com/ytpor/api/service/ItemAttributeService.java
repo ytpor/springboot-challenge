@@ -5,6 +5,7 @@ import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
 import com.ytpor.api.model.ItemAttributeCreateDTO;
 import com.ytpor.api.model.ItemAttributeUpdateDTO;
+import com.ytpor.api.model.MessageSend;
 import com.ytpor.api.repository.ItemAttributeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,5 +98,9 @@ public class ItemAttributeService {
     @Scheduled(cron = "0 * * * * *", zone = "Asia/Kuala_Lumpur") // Run every minute
     public void performDailyTask() {
         logger.info("Performing daily task");
+    }
+
+    public void backgroundProcess(MessageSend message) {
+        logger.info("Performing background process {}", message);
     }
 }

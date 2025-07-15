@@ -22,14 +22,12 @@ public class JwtConfig {
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        ApplicationProperties.JWT jwt = applicationProperties.getJwt();
-        return new NimbusJwtEncoder(new ImmutableSecret<>(jwt.getKey().getBytes()));
+        return new NimbusJwtEncoder(new ImmutableSecret<>(applicationProperties.getJwt().getKey().getBytes()));
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        ApplicationProperties.JWT jwt = applicationProperties.getJwt();
-        byte[] bytes = jwt.getKey().getBytes();
+        byte[] bytes = applicationProperties.getJwt().getKey().getBytes();
         SecretKeySpec originalKey = new SecretKeySpec(bytes, 0, bytes.length, "RSA");
         return NimbusJwtDecoder.withSecretKey(originalKey)
                 .macAlgorithm(MacAlgorithm.HS256)

@@ -21,15 +21,13 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI publicApi() {
-        ApplicationProperties.Openapi openapi = applicationProperties.getOpenapi();
-
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement()
                         .addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
-                .info(new Info().title(openapi.getTitle())
-                        .version(openapi.getVersion())
-                        .description(openapi.getDescription()));
+                .info(new Info().title(applicationProperties.getOpenapi().getTitle())
+                        .version(applicationProperties.getOpenapi().getVersion())
+                        .description(applicationProperties.getOpenapi().getDescription()));
     }
 
     private SecurityScheme createAPIKeyScheme() {

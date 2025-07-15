@@ -37,9 +37,7 @@ public class MessageController {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
         }
 
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        publisher.sendMessage(rabbitmq.getQueueCategoryKey(), messageSend);
+        publisher.sendMessage(applicationProperties.getRabbitmq().getQueueCategoryKey(), messageSend);
 
         MessageReceived response = new MessageReceived();
         response.setStatus("Message received");
@@ -54,9 +52,7 @@ public class MessageController {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
         }
 
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        publisher.sendMessage(rabbitmq.getQueueItemAttributeKey(), messageSend);
+        publisher.sendMessage(applicationProperties.getRabbitmq().getQueueItemAttributeKey(), messageSend);
 
         MessageReceived response = new MessageReceived();
         response.setStatus("Message received");

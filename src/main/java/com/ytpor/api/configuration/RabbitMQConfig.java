@@ -17,39 +17,29 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue queueCategory() {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        return new Queue(rabbitmq.getQueueCategory(), rabbitmq.isQueueCategoryDurable());
+        return new Queue(applicationProperties.getRabbitmq().getQueueCategory(), applicationProperties.getRabbitmq().isQueueCategoryDurable());
     }
 
     @Bean
     public Queue queueItemAttribute() {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        return new Queue(rabbitmq.getQueueItemAttribute(), rabbitmq.isQueueItemAttributeDurable());
+        return new Queue(applicationProperties.getRabbitmq().getQueueItemAttribute(), applicationProperties.getRabbitmq().isQueueItemAttributeDurable());
     }
 
     @Bean
     public TopicExchange topicExchange() {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        return new TopicExchange(rabbitmq.getExchangeName());
+        return new TopicExchange(applicationProperties.getRabbitmq().getExchangeName());
     }
 
     @Bean
     public Binding bindingCategory(Queue queueCategory, TopicExchange topicExchange) {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
         return BindingBuilder.bind(queueCategory).to(topicExchange)
-                .with(rabbitmq.getQueueCategoryKey());
+                .with(applicationProperties.getRabbitmq().getQueueCategoryKey());
     }
 
     @Bean
     public Binding bindingItemAttribute(Queue queueItemAttribute, TopicExchange topicExchange) {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
         return BindingBuilder.bind(queueItemAttribute).to(topicExchange)
-                .with(rabbitmq.getQueueItemAttributeKey());
+                .with(applicationProperties.getRabbitmq().getQueueItemAttributeKey());
     }
 
     @Bean

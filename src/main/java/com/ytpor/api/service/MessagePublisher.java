@@ -23,9 +23,7 @@ public class MessagePublisher {
     }
 
     public void sendMessage(String routingKey, MessageSend message) {
-        ApplicationProperties.RabbitMQ rabbitmq = applicationProperties.getRabbitmq();
-
-        rabbitTemplate.convertAndSend(rabbitmq.getExchangeName(), routingKey, message);
-        logger.info("Queue to {} {} {}", rabbitmq.getExchangeName(), routingKey, message);
+        rabbitTemplate.convertAndSend(applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
+        logger.info("Queue to {} {} {}", applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
     }
 }

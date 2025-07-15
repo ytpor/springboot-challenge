@@ -25,8 +25,7 @@ public class WeatherApiClient {
     }
 
     public WeatherResponse fetchWeather(String city) {
-        ApplicationProperties.WeatherApi weatherapi = applicationProperties.getWeatherapi();
-        String url = String.format("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", weatherapi.getKey(), city);
+        String url = String.format("https://api.weatherapi.com/v1/current.json?key=%s&q=%s", applicationProperties.getWeatherapi().getKey(), city);
         return restTemplate.getForObject(url, WeatherResponse.class);
     }
 }

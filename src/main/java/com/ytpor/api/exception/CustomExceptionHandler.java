@@ -51,6 +51,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidJsonException.class)
+    public final ResponseEntity<Object> handleInvalidJsonException(InvalidJsonException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Invalid JSON", details);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FieldDontExistException.class)
+    public final ResponseEntity<Object> handleFieldDontExistException(FieldDontExistException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Field does not exists", details);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
     @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {

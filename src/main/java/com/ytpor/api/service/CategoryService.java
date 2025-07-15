@@ -4,7 +4,9 @@ import com.ytpor.api.entity.Category;
 import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
 import com.ytpor.api.model.CategoryCreateDTO;
+import com.ytpor.api.model.CategoryListDTO;
 import com.ytpor.api.model.CategoryUpdateDTO;
+import com.ytpor.api.model.CategoryViewDTO;
 import com.ytpor.api.model.MessageSend;
 import com.ytpor.api.repository.CategoryRepository;
 import org.slf4j.Logger;
@@ -30,32 +32,61 @@ public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
     private final CategoryRepository categoryRepository;
+    private final MinioService minioService;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(
+            CategoryRepository categoryRepository,
+            MinioService minioService) {
         this.categoryRepository = categoryRepository;
+        this.minioService = minioService;
     }
 
     @Cacheable(value = "Category", key = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()")
-    public Page<Category> getAllCategories(Pageable pageable) {
+    public Page<CategoryListDTO> getAllCategories(Pageable pageable) {
         // Check if sort is empty and apply default sort
         if (!pageable.getSort().isSorted()) {
             pageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt")
-            );
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by(Sort.Direction.DESC, "createdAt"));
         }
 
-        return categoryRepository.findAll(pageable);
+        return categoryRepository.findAll(pageable)
+                .map(category -> CategoryListDTO.builder()
+                        .id(category.getId())
+                        .name(category.getName())
+                        .description(category.getDescription())
+                        .createdAt(category.getCreatedAt())
+                        .updatedAt(category.getUpdatedAt())
+                        .build());
     }
 
-    @Cacheable(value = "Category", key = "#id")
-    public Category getOneCategory(long id) {
-        return categoryRepository.findById(id)
+    public CategoryViewDTO getOneCategory(long id) {
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error(CATEGORY_NOT_FOUND, id);
                     return new RecordNotFoundException(CATEGORY_NOT_FOUND_MESSAGE + id);
                 });
+
+        String signedUrl = null;
+        try {
+            String bucket = category.getBucket();
+            String objectName = category.getObjectName();
+            signedUrl = minioService.generatePresignedUrl(bucket, objectName);
+        } catch (Exception e) {
+            logger.error("Failed to generate signed URL for category ID {}: {}", id, e.getMessage());
+        }
+
+        return CategoryViewDTO.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .objectName(category.getObjectName())
+                .objectUrl(signedUrl)
+                .objectContentType(category.getObjectContentType())
+                .createdAt(category.getCreatedAt())
+                .updatedAt(category.getUpdatedAt())
+                .build();
     }
 
     @CacheEvict(value = "Category", allEntries = true)
@@ -86,6 +117,15 @@ public class CategoryService {
         }
         if (updateDTO.getDescription() != null) {
             category.setDescription(updateDTO.getDescription());
+        }
+        if (updateDTO.getBucket() != null) {
+            category.setBucket(updateDTO.getBucket());
+        }
+        if (updateDTO.getObjectName() != null) {
+            category.setObjectName(updateDTO.getObjectName());
+        }
+        if (updateDTO.getObjectContentType() != null) {
+            category.setObjectContentType(updateDTO.getObjectContentType());
         }
 
         try {

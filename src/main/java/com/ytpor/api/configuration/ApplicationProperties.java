@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationProperties {
 
     private JWT jwt;
+    private MinIO minio;
     private Openapi openapi;
     private RabbitMQ rabbitmq;
     private WeatherApi weatherapi;
@@ -17,6 +18,15 @@ public class ApplicationProperties {
     @Data
     public static class JWT {
         private String key;
+    }
+
+    @Data
+    public static class MinIO {
+        private String url;
+        private String accessKey;
+        private String secretKey;
+        private String bucket;
+        private Integer objectTtl;
     }
 
     @Data

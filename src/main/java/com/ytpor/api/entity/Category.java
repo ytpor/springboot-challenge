@@ -29,4 +29,12 @@ public class Category extends BaseEntity {
     @Schema(description = "Description of the category", example = "Category description")
     private String description;
 
+    @Schema(description = "Bucket", example = "bucket")
+    private String bucket;
+
+    @Schema(description = "Object name", example = "2025/07/14/0e3ef9038aed7d10.jpg")
+    private String objectName;
+
+    @Schema(description = "Object content type", example = "image/jpeg")
+    private String objectContentType;
 }

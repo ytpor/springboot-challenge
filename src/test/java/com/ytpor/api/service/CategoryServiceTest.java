@@ -4,7 +4,9 @@ import com.ytpor.api.entity.Category;
 import com.ytpor.api.exception.DuplicateRecordException;
 import com.ytpor.api.exception.RecordNotFoundException;
 import com.ytpor.api.model.CategoryCreateDTO;
+import com.ytpor.api.model.CategoryListDTO;
 import com.ytpor.api.model.CategoryUpdateDTO;
+import com.ytpor.api.model.CategoryViewDTO;
 import com.ytpor.api.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ class CategoryServiceTest {
         Page<Category> page = new PageImpl<>(Collections.singletonList(category));
         when(categoryRepository.findAll(any(PageRequest.class))).thenReturn(page);
 
-        Page<Category> result = categoryService.getAllCategories(PageRequest.of(0, 10));
+        Page<CategoryListDTO> result = categoryService.getAllCategories(PageRequest.of(0, 10));
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getName()).isEqualTo("Electronics");
@@ -58,7 +60,7 @@ class CategoryServiceTest {
     void testGetOneCategory_Found() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
 
-        Category result = categoryService.getOneCategory(1L);
+        CategoryViewDTO result = categoryService.getOneCategory(1L);
 
         assertThat(result.getName()).isEqualTo("Electronics");
     }
@@ -82,7 +84,7 @@ class CategoryServiceTest {
 
         Category result = categoryService.createCategory(createDTO);
 
-        assertThat(result.getName()).isEqualTo("Electronics"); // because we mock it
+        assertThat(result.getName()).isEqualTo("Books"); // because we mock it
     }
 
     @Test

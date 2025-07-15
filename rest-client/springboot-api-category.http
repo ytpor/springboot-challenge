@@ -24,18 +24,66 @@ Authorization: Bearer {{login.response.body.token}}
 GET http://{{host}}/api/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
-###
+### 415 Unsupported Media Type
+### Content-Type 'application/json' is not supported.
 POST http://{{host}}/api/v1/category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Bags",
+    "description": "Bag"
+}
+
+### add
+POST http://{{host}}/api/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=abcde12345
+
+--abcde12345
+Content-Disposition: form-data; name="data"
 Content-Type: {{contentType}}
 
 {
     "name": "Bag",
     "description": "Bag"
 }
+--abcde12345--
 
-### update
+### add with file
+POST http://{{host}}/api/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=abcde12345
 
+--abcde12345
+Content-Disposition: form-data; name="file"; filename="example.jpg"
+Content-Type: image/jpeg
+
+< ./example.jpg
+--abcde12345
+Content-Disposition: form-data; name="data"
+Content-Type: {{contentType}}
+
+{
+    "name": "Bag",
+    "description": "Bag"
+}
+--abcde12345--
+
+### 415 Unsupported Media Type
+### Content-Type 'application/json' is not supported.
+PATCH http://{{host}}/api/v1/category/270 HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "yyy",
+    "description": "xxxx"
+}
+
+
+### 415 Unsupported Media Type
+### Content-Type 'application/json' is not supported.
 PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
@@ -44,6 +92,43 @@ Content-Type: {{contentType}}
     "name": "yyy",
     "description": "xxxx"
 }
+
+### update
+
+PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=abcde12345
+
+--abcde12345
+Content-Disposition: form-data; name="data"
+Content-Type: {{contentType}}
+
+{
+    "name": "yyy",
+    "description": "xxxx"
+}
+--abcde12345--
+
+### update with file
+
+PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=abcde12345
+
+--abcde12345
+Content-Disposition: form-data; name="file"; filename="example.jpg"
+Content-Type: image/jpeg
+
+< ./example.jpg
+--abcde12345
+Content-Disposition: form-data; name="data"
+Content-Type: {{contentType}}
+
+{
+    "name": "yyy",
+    "description": "xxxx"
+}
+--abcde12345--
 
 ### delete
 

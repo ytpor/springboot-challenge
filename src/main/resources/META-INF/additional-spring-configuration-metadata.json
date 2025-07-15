@@ -5,6 +5,31 @@
     "description": "JWT key"
   },
   {
+    "name": "application.minio.url",
+    "type": "java.lang.String",
+    "description": "MinIO Server URL"
+  },
+  {
+    "name": "application.minio.access-key",
+    "type": "java.lang.String",
+    "description": "MinIO Server Access Key"
+  },
+  {
+    "name": "application.minio.secret-key",
+    "type": "java.lang.String",
+    "description": "MinIO Server Secret Key"
+  },
+  {
+    "name": "application.minio.bucket",
+    "type": "java.lang.String",
+    "description": "MinIO Server Bucket"
+  },
+  {
+    "name": "application.minio.object-ttl",
+    "type": "java.lang.Integer",
+    "description": "MinIO Server Object TTL"
+  },
+  {
     "name": "application.openapi.description",
     "type": "java.lang.String",
     "description": "OpenAPI description"

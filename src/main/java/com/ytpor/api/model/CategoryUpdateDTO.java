@@ -16,4 +16,16 @@ public class CategoryUpdateDTO {
     @Size(max = 255)
     @Schema(description = "Description of the category", example = "Category description")
     private String description;
+
+    @Size(max = 255)
+    @Schema(hidden = true)
+    private String bucket;
+
+    @Size(max = 255)
+    @Schema(hidden = true)
+    private String objectName;
+
+    @Size(max = 255)
+    @Schema(hidden = true)
+    private String objectContentType;
 }

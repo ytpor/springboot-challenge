@@ -69,6 +69,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UnsupportedFileTypeException.class)
+    public final ResponseEntity<Object> handleUnsupportedFileTypeException(UnsupportedFileTypeException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Unsupported file type", details);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
     @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {

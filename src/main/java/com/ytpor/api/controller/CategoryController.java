@@ -7,6 +7,7 @@ import com.ytpor.api.entity.Category;
 import com.ytpor.api.exception.FieldDontExistException;
 import com.ytpor.api.exception.InvalidJsonException;
 import com.ytpor.api.exception.MissingRequestBodyException;
+import com.ytpor.api.exception.UnsupportedFileTypeException;
 import com.ytpor.api.model.CategoryCreateDTO;
 import com.ytpor.api.model.CategoryListDTO;
 import com.ytpor.api.model.CategoryUpdateDTO;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,10 +38,16 @@ public class CategoryController {
     private static final String REQUEST_BODY_MISSING = "Request body is missing.";
     private static final String REQUEST_INVALID_FIELD = "Invalid field in request body: ";
     private static final String REQUEST_INVALID_JSON = "Data sent is not valid JSON.";
+    private static final String REQUEST_UNSUPPORTED_FILE_TYPE = "Unsupported file type: ";
 
     // Declare the service as final to ensure its immutability
     private final CategoryService categoryService;
     private final MinioService minioService;
+
+    private static final List<String> ALLOWED_FILE_TYPES = List.of(
+        "image/jpeg",
+        "image/png"
+    );
 
     // Use constructor-based dependency injection
     public CategoryController(
@@ -88,6 +96,13 @@ public class CategoryController {
             throw new InvalidJsonException(REQUEST_INVALID_JSON);
         }
 
+        if (file != null && !file.isEmpty()) {
+            String contentType = file.getContentType();
+            if (!ALLOWED_FILE_TYPES.contains(contentType)) {
+                throw new UnsupportedFileTypeException(REQUEST_UNSUPPORTED_FILE_TYPE + contentType);
+            }
+        }
+
         // Create the category first (without file path)
         Category createdCategory = categoryService.createCategory(createDTO);
 
@@ -131,6 +146,13 @@ public class CategoryController {
             throw new FieldDontExistException(REQUEST_INVALID_FIELD + e.getPropertyName());
         } catch (JsonProcessingException e) {
             throw new InvalidJsonException(REQUEST_INVALID_JSON);
+        }
+
+        if (file != null && !file.isEmpty()) {
+            String contentType = file.getContentType();
+            if (!ALLOWED_FILE_TYPES.contains(contentType)) {
+                throw new UnsupportedFileTypeException("Unsupported file type: " + contentType);
+            }
         }
 
         // Update the category first (without file path)

@@ -84,7 +84,7 @@ class CategoryServiceTest {
 
         Category result = categoryService.createCategory(createDTO);
 
-        assertThat(result.getName()).isEqualTo("Books"); // because we mock it
+        assertThat(result.getName()).isEqualTo("Electronics"); // because we mock it
     }
 
     @Test

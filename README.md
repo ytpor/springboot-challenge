@@ -5,10 +5,10 @@ The challenge is to develop some backend APIs.
 ## Prerequisite
 
 * Java 17
-* MySQL version 8.0.41 or higher
-* Redis version 7.4.1 or higher
-* RabbitMQ version 4.1.1 or higher
-* MinIO
+* [MySQL](https://github.com/ytpor/mysql-challenge) version 8.0.41 or higher
+* [Redis](https://github.com/ytpor/redis-challenge) version 7.4.1 or higher
+* [RabbitMQ](https://github.com/ytpor/rabbitmq-challenge) version 4.1.1 or higher
+* [MinIO](https://github.com/ytpor/minio-challenge)
 
 ## Get started
 

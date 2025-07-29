@@ -28,10 +28,10 @@ Navigate to the folder with `build.gradle`.
 ./gradlew bootRun
 ```
 
+You can override the active profile with another, assuming that the profile exists, eg. `application-docker.properties`
+
 ```
-# Build and run
-./gradlew build
-java -jar ./build/libs/springboot-challenge-0.0.1-SNAPSHOT.jar
+./gradlew bootRun --args='--spring.profiles.active=docker'
 ```
 
 You can then access the API documentation through the following URL:
@@ -51,3 +51,33 @@ http://localhost:8080/swagger-ui/index.html
 ```
 
 You can also find some sample HTTP requests in the [here](./rest-client).
+
+## Building Docker Image
+
+```
+docker compose build
+```
+
+## Running the Docker Image
+
+As our MySQL, Redis, RabbitMQ and MinIO runs in Docker, we can access services using that their `container_name`.
+
+```
+# .env
+SBC_MYSQL_DB_URL=jdbc:mysql://mysql:3306/member_db
+SBC_MINIO_URL=http://minio:9000
+SBC_RABBITMQ_HOST=rabbitmq
+SBC_REDIS_HOST=redis
+```
+
+```
+# Using docker compose
+docker compose up -d
+```
+
+Get environment value from a file.
+
+```
+# Run command in directory with the .env file
+docker run -p 8080:8080 --env-file .env springboot-challenge-app
+```

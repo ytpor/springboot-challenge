@@ -1,0 +1,16 @@
+services:
+  app:
+    container_name: springboot-challenge
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .env:/app/.env
+    environment:
+      TZ: ${TIMEZONE:-Asia/Kuala_Lumpur}
+networks:
+  default:
+    name: nginx-proxy
+    external: true

@@ -2,7 +2,6 @@ package com.ytpor.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ytpor.api.model.*;
-import com.ytpor.api.service.EncryptionService;
 import com.ytpor.api.service.PasswordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,6 @@ class ToolControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private EncryptionService encryptionService;
-
-    @MockitoBean
     private PasswordService passwordService;
 
     @Autowired
@@ -46,58 +42,6 @@ class ToolControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uid").exists());
-    }
-
-    @Test
-    void testEncrypt() throws Exception {
-        EncryptionEncryptDTO encryptDTO = new EncryptionEncryptDTO();
-        encryptDTO.setPlainText("Test Plain Text");
-
-        Encryption encryption = new Encryption();
-        encryption.setEncryptedText("Encrypted Text");
-
-        when(encryptionService.encrypt(any(EncryptionEncryptDTO.class))).thenReturn(encryption);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/tool/encrypt")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(encryptDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.encryptedText").value("Encrypted Text"));
-
-        verify(encryptionService, times(1)).encrypt(any(EncryptionEncryptDTO.class));
-    }
-
-    @Test
-    void testEncrypt_MissingRequestBody() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/tool/encrypt")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
-    void testDecrypt() throws Exception {
-        EncryptionDecryptDTO decryptDTO = new EncryptionDecryptDTO();
-        decryptDTO.setEncryptedText("Encrypted Text");
-
-        Encryption encryption = new Encryption();
-        encryption.setPlainText("Decrypted Text");
-
-        when(encryptionService.decrypt(any(EncryptionDecryptDTO.class))).thenReturn(encryption);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/tool/decrypt")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(decryptDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.plainText").value("Decrypted Text"));
-
-        verify(encryptionService, times(1)).decrypt(any(EncryptionDecryptDTO.class));
-    }
-
-    @Test
-    void testDecrypt_MissingRequestBody() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/tool/decrypt")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

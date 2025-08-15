@@ -9,13 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ytpor.api.model.SerialVersionUID;
 import com.ytpor.api.exception.MissingRequestBodyException;
-import com.ytpor.api.model.Encryption;
-import com.ytpor.api.model.EncryptionDecryptDTO;
-import com.ytpor.api.model.EncryptionEncryptDTO;
 import com.ytpor.api.model.Password;
 import com.ytpor.api.model.PasswordEncodeDTO;
 import com.ytpor.api.model.PasswordMatchDTO;
-import com.ytpor.api.service.EncryptionService;
 import com.ytpor.api.service.PasswordService;
 
 @RestController
@@ -28,12 +24,9 @@ public class ToolController {
 
     private final Random random = new Random();
 
-    private final EncryptionService encryptionService;
-
     private final PasswordService passwordService;
 
-    public ToolController(EncryptionService encryptionService, PasswordService passwordService) {
-        this.encryptionService = encryptionService;
+    public ToolController(PasswordService passwordService) {
         this.passwordService = passwordService;
     }
 
@@ -44,24 +37,6 @@ public class ToolController {
         serialVersionUID.setUid(random.nextLong() + "L");
 
         return ResponseEntity.ok(serialVersionUID);
-    }
-
-    @PostMapping("/encrypt")
-    @Operation(summary = "Encrypt string", description = "Encrypt string. Find password at jasypt.encryptor.password")
-    public ResponseEntity<Encryption> encrypt(@Valid @RequestBody(required = false) EncryptionEncryptDTO encryptDTO) {
-        if (encryptDTO == null) {
-            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
-        }
-        return ResponseEntity.ok(encryptionService.encrypt(encryptDTO));
-    }
-
-    @PostMapping("/decrypt")
-    @Operation(summary = "Decrypt string", description = "Decrypt string. Find password at jasypt.encryptor.password")
-    public ResponseEntity<Encryption> decrypt(@Valid @RequestBody(required = false) EncryptionDecryptDTO decryptDTO) {
-        if (decryptDTO == null) {
-            throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
-        }
-        return ResponseEntity.ok(encryptionService.decrypt(decryptDTO));
     }
 
     @PostMapping("/encode")

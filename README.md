@@ -17,8 +17,6 @@ The challenge is to develop some backend APIs.
 * Make a copy of `.env.example`, and name it `.env`.
 * Edit the content of `.env` with your environment in mind.
 
-**NOTE** Clone [simple-jasypt](https://github.com/ytpor/simple-jasypt), and use it to encrypt the MySQL and Redis passwords, and store the encrypted string to `SBC_MYSQL_DB_PASSWORD` and `SBC_REDIS_PASSWORD`.
-
 ## Run the application
 
 Navigate to the folder with `build.gradle`.

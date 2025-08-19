@@ -9,6 +9,7 @@ The challenge is to develop some backend APIs.
 * [Redis](https://github.com/ytpor/redis-challenge) version 7.4.1 or higher
 * [RabbitMQ](https://github.com/ytpor/rabbitmq-challenge) version 4.1.1 or higher
 * [MinIO](https://github.com/ytpor/minio-challenge)
+* [OpenBao](https://github.com/ytpor/openbao-challenge)
 
 ## Get started
 
@@ -17,19 +18,85 @@ The challenge is to develop some backend APIs.
 * Make a copy of `.env.example`, and name it `.env`.
 * Edit the content of `.env` with your environment in mind.
 
+### Configuration
+
+We need to set this up in `OpenBao`.
+
+Create policy
+
+    # Used when running ./gradlew bpootRun
+    echo 'path "secret/data/springboot-challenge" { capabilities = ["read"] }' | bao policy write springboot-challenge-policy -
+    # Used when running docker run
+    echo 'path "secret/data/springboot-challenge/dev" { capabilities = ["read"] }' | bao policy write springboot-challenge-dev-policy -
+
+Create AppRole
+
+    bao write auth/approle/role/springboot-challenge-role token_policies="springboot-challenge-policy,springboot-challenge-dev-policy"
+
+Fetch Role ID
+
+    bao read auth/approle/role/springboot-challenge-role/role-id
+
+Generate and fetch Secret ID
+
+    bao write -f auth/approle/role/springboot-challenge-role/secret-id
+
+Enable the Secrets Engine
+
+    bao secrets enable -path=secret kv-v2
+
+Add the secret
+
+```
+bao kv put secret/springboot-challenge \
+    jwt.key="M6tUuERk1fDWRCd2AJa2BzWTUQ+GPxzJbHlJEap16rXj72J4BeG6T1WiQcs8NCJ+" \
+    minio.url="http://127.0.0.1:9000" \
+    minio.access-key="username" \
+    minio.secret-key="password" \
+    rabbitmq.queue-category="queue_name" \
+    rabbitmq.queue-category-key="queue_name" \
+    rabbitmq.queue-item-attribute="other_queue_name" \
+    rabbitmq.queue-item-attribute-key="other_queue_name" \
+    rabbitmq.exchange-name="topic_exchange" \
+    spring.data.redis.host="localhost" \
+    spring.data.redis.port="6379" \
+    spring.data.redis.password="password" \
+    spring.datasource.url="jdbc:mysql://127.0.0.1:3306/database" \
+    spring.datasource.username="username" \
+    spring.datasource.password="password" \
+    spring.rabbitmq.host="127.0.0.1" \
+    spring.rabbitmq.port="5672" \
+    spring.rabbitmq.username="username" \
+    spring.rabbitmq.password="password" \
+    spring.rabbitmq.virtual-host="virtual_host" \
+    weatherapi.key="M6tUuERk1fDWRCd2AJa2BzWTUQ+GPxzJbHlJEap16rXj72J4BeG6T1WiQcs8NCJ+"
+```
+
+Verification
+
+    bao kv get secret/springboot-challenge
+
 ## Run the application
 
 Navigate to the folder with `build.gradle`.
 
 ```
 # Run
+VAULT_URL=http://127.0.0.1:8200 \
+VAULT_PATH=springboot-challenge \
+VAULT_ROLE_ID=64b1f513-f6d6-df20-26b1-0d3e0f4d67f8 \
+VAULT_SECRET_ID=fcf50e63-5b7c-49c4-1f46-b6af8df1f62f \
 ./gradlew bootRun
 ```
 
-You can override the active profile with another, assuming that the profile exists, eg. `application-docker.properties`
+You can override the active profile with another, assuming that the profile exists, eg. `application-prod.properties`
 
 ```
-./gradlew bootRun --args='--spring.profiles.active=docker'
+VAULT_URL=http://127.0.0.1:8200 \
+VAULT_PATH=springboot-challenge \
+VAULT_ROLE_ID=64b1f513-f6d6-df20-26b1-0d3e0f4d67f8 \
+VAULT_SECRET_ID=fcf50e63-5b7c-49c4-1f46-b6af8df1f62f \
+./gradlew bootRun --args='--spring.profiles.active=prod'
 ```
 
 You can then access the API documentation through the following URL:
@@ -54,28 +121,43 @@ You can also find some sample HTTP requests in the [here](./rest-client).
 
 ```
 docker compose build
+
+# -OR-
+docker build -t springboot-challenge-app .
+# -OR-
+docker build --build-arg SPRING_PROFILE=prod -t springboot-challenge-app .
 ```
 
 ## Running the Docker Image
 
-As our MySQL, Redis, RabbitMQ and MinIO runs in Docker, we can access services using that their `container_name`.
+As our MySQL, Redis, RabbitMQ and MinIO runs in Docker, we can access services using their `container_name`.
 
 ```
-# .env
-SBC_MYSQL_DB_URL=jdbc:mysql://mysql:3306/member_db
-SBC_MINIO_URL=http://minio:9000
-SBC_RABBITMQ_HOST=rabbitmq
-SBC_REDIS_HOST=redis
+# Update these value and create a new path. Take note of 'dev'
+bao kv put secret/springboot-challenge/dev \
+    ...
+    minio.url="http://minio:9000" \
+    spring.data.redis.host="redis" \
+    spring.datasource.url="jdbc:mysql://mysql:3306/database" \
+    spring.rabbitmq.host="rabbitmq" \
+    ...
 ```
 
-```
-# Using docker compose
-docker compose up -d
-```
-
-Get environment value from a file.
+Run the docker image
 
 ```
-# Run command in directory with the .env file
-docker run -p 8080:8080 --env-file .env springboot-challenge-app
+# Relies on values from .env
+docker compose up
+```
+
+Or,
+
+```
+docker run -e VAULT_URL=http://openbao-server:8200 \
+    -e VAULT_PATH=springboot-challenge \
+    -e VAULT_ROLE_ID=64b1f513-f6d6-df20-26b1-0d3e0f4d67f8 \
+    -e VAULT_SECRET_ID=fcf50e63-5b7c-49c4-1f46-b6af8df1f62f \
+    -e SPRING_PROFILES_ACTIVE=prod \
+    --network nginx-proxy \
+    -p 8080:8080 springboot-challenge-app
 ```

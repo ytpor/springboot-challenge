@@ -13,7 +13,7 @@ public class QueueItemAttributeConsumer {
         this.itemAttributeService = itemAttributeService;
     }
 
-    @RabbitListener(queues = "${application.rabbitmq.queue-item-attribute}")
+    @RabbitListener(queues = "${rabbitmq.queue-item-attribute}")
     public void receiveMessage(MessageSend message) {
         itemAttributeService.backgroundProcess(message);
     }

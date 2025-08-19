@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "application")
+@ConfigurationProperties
 public class ApplicationProperties {
 
     private JWT jwt;

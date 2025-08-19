@@ -1,15 +1,16 @@
 services:
   app:
     container_name: springboot-challenge
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    build: .
     ports:
       - "8080:8080"
-    volumes:
-      - .env:/app/.env
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       TZ: ${TIMEZONE:-Asia/Kuala_Lumpur}
+      VAULT_URL: ${VAULT_URL}
+      VAULT_PATH: ${VAULT_PATH}
+      VAULT_ROLE_ID: ${VAULT_ROLE_ID}
+      VAULT_SECRET_ID: ${VAULT_SECRET_ID}
 networks:
   default:
     name: nginx-proxy

@@ -13,7 +13,7 @@ public class QueueCategoryConsumer {
         this.categoryService = categoryService;
     }
 
-    @RabbitListener(queues = "${application.rabbitmq.queue-category}")
+    @RabbitListener(queues = "${rabbitmq.queue-category}")
     public void receiveMessage(MessageSend message) {
         categoryService.backgroundProcess(message);
     }

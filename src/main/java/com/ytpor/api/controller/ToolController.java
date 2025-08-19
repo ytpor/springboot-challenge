@@ -8,10 +8,13 @@ import java.util.Random;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ytpor.api.model.SerialVersionUID;
+import com.ytpor.api.model.SystemStatus;
 import com.ytpor.api.exception.MissingRequestBodyException;
 import com.ytpor.api.model.Password;
 import com.ytpor.api.model.PasswordEncodeDTO;
 import com.ytpor.api.model.PasswordMatchDTO;
+import com.ytpor.api.service.MessagePublisher;
+import com.ytpor.api.service.MinioService;
 import com.ytpor.api.service.PasswordService;
 
 @RestController
@@ -24,9 +27,17 @@ public class ToolController {
 
     private final Random random = new Random();
 
+    private final MessagePublisher messagePublisher;
+    private final MinioService minioService;
     private final PasswordService passwordService;
 
-    public ToolController(PasswordService passwordService) {
+    public ToolController(
+        MessagePublisher messagePublisher,
+        MinioService minioService,
+        PasswordService passwordService
+    ) {
+        this.messagePublisher = messagePublisher;
+        this.minioService = minioService;
         this.passwordService = passwordService;
     }
 
@@ -55,5 +66,14 @@ public class ToolController {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
         }
         return ResponseEntity.ok(passwordService.match(matchDTO));
+    }
+
+    @GetMapping("/status")
+    @Operation(summary = "System status", description = "Display various system statuses")
+    public ResponseEntity<SystemStatus> generateStatus() {
+        SystemStatus systemStatus = new SystemStatus();
+        systemStatus.setMinio(minioService.isMinioReachable());
+        systemStatus.setRabbitmq(messagePublisher.isRabbitMqReachable());
+        return ResponseEntity.ok(systemStatus);
     }
 }

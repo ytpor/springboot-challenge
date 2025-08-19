@@ -22,8 +22,22 @@ public class MessagePublisher {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+    public boolean isRabbitMqReachable() {
+        try {
+            rabbitTemplate.execute(channel -> null);
+            return true;
+        } catch (Exception e) {
+            logger.error("RabbitMQ is not reachable: {}", e.getMessage());
+            return false;
+        }
+    }
+
     public void sendMessage(String routingKey, MessageSend message) {
-        rabbitTemplate.convertAndSend(applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
-        logger.info("Queue to {} {} {}", applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
+        if (isRabbitMqReachable()) {
+            rabbitTemplate.convertAndSend(applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
+            logger.info("Queue to {} {} {}", applicationProperties.getRabbitmq().getExchangeName(), routingKey, message);
+        } else {
+            logger.error("Message not sent, RabbitMQ is reachable.");
+        }
     }
 }

@@ -4,6 +4,7 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.http.Method;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.ytpor.api.configuration.ApplicationProperties;
@@ -23,12 +24,16 @@ public class MinioService {
 
     public MinioService(
             ApplicationProperties applicationProperties,
-            MinioClient minioClient) {
+            @Autowired(required = false) MinioClient minioClient) {
         this.applicationProperties = applicationProperties;
         this.minioClient = minioClient;
     }
 
     public String uploadFileAndGetPath(MultipartFile file) throws IOException {
+        if (minioClient == null) {
+            throw new IllegalStateException("MinIO client is not available.");
+        }
+
         validateFile(file);
 
         String objectName;
@@ -82,6 +87,10 @@ public class MinioService {
     }
 
     public String generatePresignedUrl(String bucket, String objectName) throws Exception {
+        if (minioClient == null) {
+            throw new IllegalStateException("MinIO client is not available.");
+        }
+
         return minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
@@ -94,5 +103,9 @@ public class MinioService {
 
     public String getBucket() {
         return applicationProperties.getMinio().getBucket();
+    }
+
+    public boolean isMinioReachable() {
+        return minioClient != null;
     }
 }

@@ -4,9 +4,11 @@ import io.minio.MinioClient;
 import io.minio.MakeBucketArgs;
 import io.minio.BucketExistsArgs;
 import jakarta.annotation.PostConstruct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnBean(MinioClient.class)
 public class MinioInitializer {
 
     private final MinioClient minioClient;

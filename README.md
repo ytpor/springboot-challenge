@@ -24,14 +24,15 @@ We need to set this up in `OpenBao`.
 
 Create policy
 
-    # Used when running ./gradlew bpootRun
+    # Used when running ./gradlew bootRun
     echo 'path "secret/data/springboot-challenge" { capabilities = ["read"] }' | bao policy write springboot-challenge-policy -
-    # Used when running docker run
     echo 'path "secret/data/springboot-challenge/dev" { capabilities = ["read"] }' | bao policy write springboot-challenge-dev-policy -
+    # Used when running docker run
+    echo 'path "secret/data/springboot-challenge/prod" { capabilities = ["read"] }' | bao policy write springboot-challenge-prod-policy -
 
 Create AppRole
 
-    bao write auth/approle/role/springboot-challenge-role token_policies="springboot-challenge-policy,springboot-challenge-dev-policy"
+    bao write auth/approle/role/springboot-challenge-role token_policies="springboot-challenge-policy,springboot-challenge-dev-policy,springboot-challenge-prod-policy"
 
 Fetch Role ID
 
@@ -48,7 +49,7 @@ Enable the Secrets Engine
 Add the secret
 
 ```
-bao kv put secret/springboot-challenge \
+bao kv put secret/springboot-challenge/dev \
     jwt.key="M6tUuERk1fDWRCd2AJa2BzWTUQ+GPxzJbHlJEap16rXj72J4BeG6T1WiQcs8NCJ+" \
     minio.url="http://127.0.0.1:9000" \
     minio.access-key="username" \
@@ -74,7 +75,7 @@ bao kv put secret/springboot-challenge \
 
 Verification
 
-    bao kv get secret/springboot-challenge
+    bao kv get secret/springboot-challenge/dev
 
 ## Run the application
 
@@ -133,8 +134,8 @@ docker build --build-arg SPRING_PROFILE=prod -t springboot-challenge-app .
 As our MySQL, Redis, RabbitMQ and MinIO runs in Docker, we can access services using their `container_name`.
 
 ```
-# Update these value and create a new path. Take note of 'dev'
-bao kv put secret/springboot-challenge/dev \
+# Update these value and create a new path. Take note of 'prod'
+bao kv put secret/springboot-challenge/prod \
     ...
     minio.url="http://minio:9000" \
     spring.data.redis.host="redis" \

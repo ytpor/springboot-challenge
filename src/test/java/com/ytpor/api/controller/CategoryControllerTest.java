@@ -75,7 +75,7 @@ class CategoryControllerTest {
 
         when(categoryService.getAllCategories(any(Pageable.class))).thenReturn(categoryPage);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/category")
                 .param("page", "0")
                 .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class CategoryControllerTest {
     void testGetOneCategory() throws Exception {
         when(categoryService.getOneCategory(1L)).thenReturn(categoryView);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/category/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
@@ -106,7 +106,7 @@ class CategoryControllerTest {
     void testGetOneCategory_NotFound() throws Exception {
         when(categoryService.getOneCategory(anyLong())).thenThrow(new RecordNotFoundException("Category not found."));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/category/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
@@ -123,7 +123,7 @@ class CategoryControllerTest {
         when(categoryService.getOneCategory(eq(1L))).thenReturn(categoryView);
         when(categoryService.createCategory(any(CategoryCreateDTO.class))).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(createDTO)))
                 .contentType("multipart/form-data"))
@@ -155,7 +155,7 @@ class CategoryControllerTest {
         org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile("file",
                 "file.jpg", "image/jpeg", "dummy".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(createDTO)))
                 .file(file)
@@ -173,7 +173,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "USER" })
     void testCreateCategory_UnsupportedMediaType() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/category")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType());
     }
@@ -181,7 +181,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "USER" })
     void testCreateCategory_MissingData() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category")
                 .contentType("multipart/form-data"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -198,7 +198,7 @@ class CategoryControllerTest {
         org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile("file",
                 "file.jpg", "image/jpeg", "dummy".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(createDTO)))
                 .file(file)
@@ -221,7 +221,7 @@ class CategoryControllerTest {
         when(categoryService.getOneCategory(eq(1L))).thenReturn(categoryView);
         when(categoryService.createCategory(any(CategoryCreateDTO.class))).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(createDTO)))
                 .file(emptyFile)
@@ -247,7 +247,7 @@ class CategoryControllerTest {
         when(categoryService.getOneCategory(eq(1L))).thenReturn(categoryView);
         when(categoryService.updateCategory(eq(1L), any(CategoryUpdateDTO.class))).thenReturn(updatedCategory);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(updateDTO)))
                 .with(request -> {
@@ -281,7 +281,7 @@ class CategoryControllerTest {
         org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile("file",
                 "file.jpg", "image/jpeg", "dummy".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(updateDTO)))
                 .file(file)
@@ -302,7 +302,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "USER" })
     void testUpdateCategory_MissingData() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .with(request -> {
                     request.setMethod("PATCH");
                     return request;
@@ -323,7 +323,7 @@ class CategoryControllerTest {
         org.springframework.mock.web.MockMultipartFile file = new org.springframework.mock.web.MockMultipartFile("file",
                 "file.jpg", "image/jpeg", "dummy".getBytes());
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(updateDTO)))
                 .file(file)
@@ -354,7 +354,7 @@ class CategoryControllerTest {
         when(categoryService.getOneCategory(eq(1L))).thenReturn(categoryView);
         when(categoryService.updateCategory(eq(1L), any(CategoryUpdateDTO.class))).thenReturn(updatedCategory);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(updateDTO)))
                 .file(emptyFile)
@@ -374,7 +374,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "USER" })
     void testUpdateCategory_UnsupportedMediaType() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/category/1"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/category/1"))
                 .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType());
     }
 
@@ -387,7 +387,7 @@ class CategoryControllerTest {
         when(categoryService.updateCategory(anyLong(), any(CategoryUpdateDTO.class)))
                 .thenThrow(new RecordNotFoundException("Category not found."));
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/category/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/v1/category/1")
                 .file(new org.springframework.mock.web.MockMultipartFile("data", "", "application/json",
                         objectMapper.writeValueAsBytes(updateDTO)))
                 .with(request -> {
@@ -406,7 +406,7 @@ class CategoryControllerTest {
     void testDeleteCategory() throws Exception {
         doNothing().when(categoryService).deleteCategory(anyLong());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/category/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/category/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         verify(categoryService, times(1)).deleteCategory(anyLong());
@@ -417,7 +417,7 @@ class CategoryControllerTest {
     void testDeleteCategory_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Category not found.")).when(categoryService).deleteCategory(anyLong());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/category/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/category/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
 

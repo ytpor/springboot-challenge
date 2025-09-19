@@ -4,7 +4,7 @@
 @contentType = application/json
 
 # @name login
-POST http://{{host}}/api/auth/token HTTP/1.1
+POST http://{{host}}/auth/token HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -13,7 +13,7 @@ Content-Type: {{contentType}}
 }
 
 ### show
-POST http://{{host}}/api/v1/message/send-category HTTP/1.1
+POST http://{{host}}/v1/message/send-category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -23,7 +23,7 @@ Content-Type: {{contentType}}
 }
 
 ### show
-POST http://{{host}}/api/v1/message/send-item-attribute HTTP/1.1
+POST http://{{host}}/v1/message/send-item-attribute HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 

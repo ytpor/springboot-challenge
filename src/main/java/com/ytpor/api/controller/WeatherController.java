@@ -9,7 +9,7 @@ import com.ytpor.api.model.WeatherResponse;
 import com.ytpor.api.service.WeatherService;
 
 @RestController
-@RequestMapping("/api/v1/weather")
+@RequestMapping("/v1/weather")
 @Tag(name = "Weather")
 public class WeatherController {
 

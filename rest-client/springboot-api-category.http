@@ -4,7 +4,7 @@
 @contentType = application/json
 
 # @name login
-POST http://{{host}}/api/auth/token HTTP/1.1
+POST http://{{host}}/auth/token HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -13,20 +13,20 @@ Content-Type: {{contentType}}
 }
 
 ### index
-GET http://{{host}}/api/v1/category HTTP/1.1
+GET http://{{host}}/v1/category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ### index
-GET http://{{host}}/api/v1/category?page=0&size=5&sort=id,desc HTTP/1.1
+GET http://{{host}}/v1/category?page=0&size=5&sort=id,desc HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ### show
-GET http://{{host}}/api/v1/category/1 HTTP/1.1
+GET http://{{host}}/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-POST http://{{host}}/api/v1/category HTTP/1.1
+POST http://{{host}}/v1/category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -36,7 +36,7 @@ Content-Type: {{contentType}}
 }
 
 ### add
-POST http://{{host}}/api/v1/category HTTP/1.1
+POST http://{{host}}/v1/category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
@@ -51,7 +51,7 @@ Content-Type: {{contentType}}
 --abcde12345--
 
 ### add with file
-POST http://{{host}}/api/v1/category HTTP/1.1
+POST http://{{host}}/v1/category HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
@@ -72,7 +72,7 @@ Content-Type: {{contentType}}
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-PATCH http://{{host}}/api/v1/category/270 HTTP/1.1
+PATCH http://{{host}}/v1/category/270 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -84,7 +84,7 @@ Content-Type: {{contentType}}
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
+PATCH http://{{host}}/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -95,7 +95,7 @@ Content-Type: {{contentType}}
 
 ### update
 
-PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
+PATCH http://{{host}}/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
@@ -111,7 +111,7 @@ Content-Type: {{contentType}}
 
 ### update with file
 
-PATCH http://{{host}}/api/v1/category/1 HTTP/1.1
+PATCH http://{{host}}/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
@@ -132,5 +132,5 @@ Content-Type: {{contentType}}
 
 ### delete
 
-DELETE  http://{{host}}/api/v1/category/1 HTTP/1.1
+DELETE  http://{{host}}/v1/category/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}

@@ -4,7 +4,7 @@
 @contentType = application/json
 
 # @name login
-POST http://{{host}}/api/auth/token HTTP/1.1
+POST http://{{host}}/auth/token HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -13,19 +13,19 @@ Content-Type: {{contentType}}
 }
 
 ### index
-GET http://{{host}}/api/v1/attribute HTTP/1.1
+GET http://{{host}}/v1/attribute HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ### index
-GET http://{{host}}/api/v1/attribute?page=0&size=5&sort=id,desc HTTP/1.1
+GET http://{{host}}/v1/attribute?page=0&size=5&sort=id,desc HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ### show
-GET http://{{host}}/api/v1/attribute/1 HTTP/1.1
+GET http://{{host}}/v1/attribute/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 
 ###
-POST http://{{host}}/api/v1/attribute HTTP/1.1
+POST http://{{host}}/v1/attribute HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -36,7 +36,7 @@ Content-Type: {{contentType}}
 
 ### update
 
-PATCH  http://{{host}}/api/v1/attribute/1 HTTP/1.1
+PATCH  http://{{host}}/v1/attribute/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}
 Content-Type: {{contentType}}
 
@@ -47,5 +47,5 @@ Content-Type: {{contentType}}
 
 ### delete
 
-DELETE  http://{{host}}/api/v1/attribute/1 HTTP/1.1
+DELETE  http://{{host}}/v1/attribute/1 HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}

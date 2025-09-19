@@ -39,7 +39,7 @@ class AuthControllerTest {
         when(authService.authenticate(any(AuthRequest.class))).thenReturn(mockResponse);
 
         // Act & Assert
-        mockMvc.perform(post("/api/auth/token")
+        mockMvc.perform(post("/auth/token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(authRequest)))
                 .andExpect(status().isOk())

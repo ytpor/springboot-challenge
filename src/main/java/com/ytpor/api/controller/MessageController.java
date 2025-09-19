@@ -13,7 +13,7 @@ import com.ytpor.api.model.MessageSend;
 import com.ytpor.api.service.MessagePublisher;
 
 @RestController
-@RequestMapping("/api/v1/message")
+@RequestMapping("/v1/message")
 @Tag(name = "Message")
 public class MessageController {
 

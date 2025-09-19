@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v1/category")
+@RequestMapping("/v1/category")
 @Tag(name = "Category")
 public class CategoryController {
 

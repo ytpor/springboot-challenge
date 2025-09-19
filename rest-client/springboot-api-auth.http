@@ -6,7 +6,7 @@
 ###
 
 # @name login
-POST http://{{host}}/api/auth/token HTTP/1.1
+POST http://{{host}}/auth/token HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -16,5 +16,5 @@ Content-Type: {{contentType}}
 
 ###
 
-GET http://{{host}}/api/secured  HTTP/1.1
+GET http://{{host}}/secured  HTTP/1.1
 Authorization: Bearer {{login.response.body.token}}

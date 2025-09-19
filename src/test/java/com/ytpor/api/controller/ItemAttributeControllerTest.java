@@ -58,7 +58,7 @@ class ItemAttributeControllerTest {
 
         when(itemAttributeService.getAllItemAttributes(any(Pageable.class))).thenReturn(itemAttributePage);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/attribute")
                 .param("page", "0")
                 .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +76,7 @@ class ItemAttributeControllerTest {
     void testGetOneItemAttribute() throws Exception {
         when(itemAttributeService.getOneItemAttribute(1L)).thenReturn(itemAttribute);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
@@ -89,7 +89,7 @@ class ItemAttributeControllerTest {
     void testGetOneItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.getOneItemAttribute(anyLong())).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/attribute/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
@@ -105,7 +105,7 @@ class ItemAttributeControllerTest {
 
         when(itemAttributeService.createItemAttribute(any(ItemAttributeCreateDTO.class))).thenReturn(itemAttribute);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/attribute")
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/attribute")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -118,7 +118,7 @@ class ItemAttributeControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testCreateItemAttribute_NoContent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/attribute")
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/attribute")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -131,7 +131,7 @@ class ItemAttributeControllerTest {
 
         when(itemAttributeService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenReturn(itemAttribute);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -143,7 +143,7 @@ class ItemAttributeControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testUpdateItemAttribute_NoContent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -152,7 +152,7 @@ class ItemAttributeControllerTest {
     void testUpdateItemAttribute_NotFound() throws Exception {
         when(itemAttributeService.updateItemAttribute(anyLong(), any(ItemAttributeUpdateDTO.class))).thenThrow(new RecordNotFoundException("Item Attribute not found."));
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/attribute/1")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/attribute/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemAttribute)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -166,7 +166,7 @@ class ItemAttributeControllerTest {
     void testDeleteItemAttribute() throws Exception {
         doNothing().when(itemAttributeService).deleteItemAttribute(anyLong());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/attribute/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         verify(itemAttributeService, times(1)).deleteItemAttribute(anyLong());
@@ -177,7 +177,7 @@ class ItemAttributeControllerTest {
     void testDeleteItemAttribute_NotFound() throws Exception {
         doThrow(new RecordNotFoundException("Item Attribute not found.")).when(itemAttributeService).deleteItemAttribute(anyLong());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/attribute/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/attribute/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Record Not Found"));
 

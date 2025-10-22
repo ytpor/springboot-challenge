@@ -72,7 +72,10 @@ public class CategoryService {
         try {
             String bucket = category.getBucket();
             String objectName = category.getObjectName();
-            signedUrl = minioService.generatePresignedUrl(bucket, objectName);
+
+            if (bucket != null && !bucket.isEmpty() && objectName != null && !objectName.isEmpty()) {
+                signedUrl = minioService.generatePresignedUrl(bucket, objectName);
+            }
         } catch (Exception e) {
             logger.error("Failed to generate signed URL for category ID {}: {}", id, e.getMessage());
         }

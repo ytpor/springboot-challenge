@@ -10,6 +10,8 @@ The challenge is to develop some backend APIs.
 * [RabbitMQ](https://github.com/ytpor/rabbitmq-challenge) version 4.1.1 or higher
 * [MinIO](https://github.com/ytpor/minio-challenge)
 * [OpenBao](https://github.com/ytpor/openbao-challenge)
+* [Keycloak](https://github.com/ytpor/keycloak-challenge)
+* [Apache APISIX](https://github.com/ytpor/apisix-challenge)
 
 ## Get started
 
@@ -100,10 +102,30 @@ VAULT_SECRET_ID=fcf50e63-5b7c-49c4-1f46-b6af8df1f62f \
 ./gradlew bootRun --args='--spring.profiles.active=prod'
 ```
 
+OR
+
+```
+./bootRun
+```
+
 You can then access the API documentation through the following URL:
 
 ```
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8180/swagger-ui/index.html
+```
+
+### Hot Reload
+
+From another terminal, run the below.
+
+```
+ ./gradlew build -x test --continuous
+```
+
+OR
+
+```
+ ./hotReload
 ```
 
 ## Run the tests
@@ -160,5 +182,5 @@ docker run -e VAULT_URL=http://openbao-server:8200 \
     -e VAULT_SECRET_ID=fcf50e63-5b7c-49c4-1f46-b6af8df1f62f \
     -e SPRING_PROFILES_ACTIVE=prod \
     --network nginx-proxy \
-    -p 8080:8080 springboot-challenge-app
+    -p 8180:8080 springboot-challenge-app
 ```

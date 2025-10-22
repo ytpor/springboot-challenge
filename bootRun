@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Load environment variables from .env file
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+else
+  echo ".env file not found!"
+  exit 1
+fi
+
+# Run the command with inline environment variables
+VAULT_URL=http://127.0.0.1:8200 \
+VAULT_PATH=${VAULT_PATH} \
+VAULT_ROLE_ID=${VAULT_ROLE_ID} \
+VAULT_SECRET_ID=${VAULT_SECRET_ID} \
+./gradlew bootRun --args='--spring.profiles.active=dev'

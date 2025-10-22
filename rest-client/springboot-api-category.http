@@ -1,33 +1,44 @@
-@hostname = localhost
-@port = 8080
-@host = {{hostname}}:{{port}}
+@keycloakHost = http://{{$dotenv KC_HOST}}
+@keycloakClientId = {{$dotenv KC_CLIENT_BACKEND_ID}}
+@keycloakClientSecret = {{$dotenv KC_CLIENT_BACKEND_SECRET}}
+
+@realm = {{$dotenv KC_REALM}}
+
+@host = http://{{$dotenv API_HOST}}
 @contentType = application/json
+@adminUsername = {{$dotenv KC_TEST_ADMIN}}
+@adminPassword = {{$dotenv KC_TEST_ADMIN_PWD}}
+@username = {{$dotenv KC_TEST_USER}}
+@password = {{$dotenv KC_TEST_USER_PWD}}
+
+###
 
 # @name login
-POST http://{{host}}/auth/token HTTP/1.1
-Content-Type: {{contentType}}
+POST {{keycloakHost}}/realms/{{realm}}/protocol/openid-connect/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
 
-{
-    "username": "user",
-    "password": "user"
-}
-
-### index
-GET http://{{host}}/v1/category HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+grant_type=password
+&client_id={{keycloakClientId}}
+&client_secret={{keycloakClientSecret}}
+&username={{adminUsername}}
+&password={{adminPassword}}
 
 ### index
-GET http://{{host}}/v1/category?page=0&size=5&sort=id,desc HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+GET {{host}}/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
+
+### index
+GET {{host}}/v1/category?page=0&size=5&sort=id,desc HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 
 ### show
-GET http://{{host}}/v1/category/1 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+GET {{host}}/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-POST http://{{host}}/v1/category HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+POST {{host}}/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: {{contentType}}
 
 {
@@ -36,8 +47,8 @@ Content-Type: {{contentType}}
 }
 
 ### add
-POST http://{{host}}/v1/category HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+POST {{host}}/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
 --abcde12345
@@ -45,14 +56,14 @@ Content-Disposition: form-data; name="data"
 Content-Type: {{contentType}}
 
 {
-    "name": "Bag",
+    "name": "Bag000123",
     "description": "Bag"
 }
 --abcde12345--
 
 ### add with file
-POST http://{{host}}/v1/category HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+POST {{host}}/v1/category HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
 --abcde12345
@@ -65,15 +76,15 @@ Content-Disposition: form-data; name="data"
 Content-Type: {{contentType}}
 
 {
-    "name": "Bag",
+    "name": "Bag09",
     "description": "Bag"
 }
 --abcde12345--
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-PATCH http://{{host}}/v1/category/270 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+PATCH {{host}}/v1/category/270 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: {{contentType}}
 
 {
@@ -84,8 +95,8 @@ Content-Type: {{contentType}}
 
 ### 415 Unsupported Media Type
 ### Content-Type 'application/json' is not supported.
-PATCH http://{{host}}/v1/category/1 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+PATCH {{host}}/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: {{contentType}}
 
 {
@@ -95,8 +106,8 @@ Content-Type: {{contentType}}
 
 ### update
 
-PATCH http://{{host}}/v1/category/1 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+PATCH {{host}}/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
 --abcde12345
@@ -111,8 +122,8 @@ Content-Type: {{contentType}}
 
 ### update with file
 
-PATCH http://{{host}}/v1/category/1 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+PATCH {{host}}/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}
 Content-Type: multipart/form-data; boundary=abcde12345
 
 --abcde12345
@@ -132,5 +143,5 @@ Content-Type: {{contentType}}
 
 ### delete
 
-DELETE  http://{{host}}/v1/category/1 HTTP/1.1
-Authorization: Bearer {{login.response.body.token}}
+DELETE  {{host}}/v1/category/1 HTTP/1.1
+Authorization: Bearer {{login.response.body.access_token}}

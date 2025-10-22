@@ -1,9 +1,8 @@
 services:
-  app:
-    container_name: springboot-challenge
+  springboot-challenge:
     build: .
     ports:
-      - "8080:8080"
+      - "${SPRING_PORT:-8180}:8180"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       TZ: ${TIMEZONE:-Asia/Kuala_Lumpur}

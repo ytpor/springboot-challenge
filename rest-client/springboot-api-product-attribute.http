@@ -1,16 +1,14 @@
-@hostname = localhost
-@port = 8080
-@host = {{hostname}}:{{port}}
+@host = http://{{$dotenv API_HOST}}
 @contentType = application/json
 
 ### index
-GET http://{{host}}/v1/product-attribute HTTP/1.1
+GET {{host}}/v1/product-attribute HTTP/1.1
 
 ### show
-GET http://{{host}}/v1/product-attribute/1 HTTP/1.1
+GET {{host}}/v1/product-attribute/1 HTTP/1.1
 
 ###
-POST http://{{host}}/v1/product-attribute HTTP/1.1
+POST {{host}}/v1/product-attribute HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -20,7 +18,7 @@ Content-Type: {{contentType}}
 
 ### update
 
-PUT  http://{{host}}/v1/product-attribute/1 HTTP/1.1
+PUT  {{host}}/v1/product-attribute/1 HTTP/1.1
 Content-Type: {{contentType}}
 
 {
@@ -30,5 +28,5 @@ Content-Type: {{contentType}}
 
 ### delete
 
-DELETE  http://{{host}}/v1/product-attribute/88 HTTP/1.1
+DELETE  {{host}}/v1/product-attribute/88 HTTP/1.1
 

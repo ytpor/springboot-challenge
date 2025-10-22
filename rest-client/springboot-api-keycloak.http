@@ -13,7 +13,7 @@
 
 ###
 
-# @name login
+# @name loginAdmin
 POST {{keycloakHost}}/realms/{{realm}}/protocol/openid-connect/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
@@ -23,22 +23,21 @@ grant_type=password
 &username={{adminUsername}}
 &password={{adminPassword}}
 
-### show
-POST {{host}}/v1/message/send-category HTTP/1.1
-Authorization: Bearer {{login.response.body.access_token}}
-Content-Type: {{contentType}}
+###
+GET {{host}}/tool/status  HTTP/1.1
 
-{
-    "title": "category",
-    "content": "category"
-}
+###
+GET {{host}}/v1/category HTTP/1.1
+Authorization: Bearer {{loginAdmin.response.body.access_token}}
 
-### show
-POST {{host}}/v1/message/send-item-attribute HTTP/1.1
-Authorization: Bearer {{login.response.body.access_token}}
-Content-Type: {{contentType}}
+###
 
-{
-    "title": "item-attribute",
-    "content": "item-attribute"
-}
+# @name loginUser
+POST {{keycloakHost}}/realms/{{realm}}/protocol/openid-connect/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password
+&client_id={{keycloakClientId}}
+&client_secret={{keycloakClientSecret}}
+&username={{username}}
+&password={{password}}

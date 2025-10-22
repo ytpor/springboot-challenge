@@ -2,6 +2,7 @@ package com.ytpor.api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +33,7 @@ public class MessageController {
 
     @PostMapping("/send-category")
     @Operation(summary = "Send category message", description = "Send a message to the category queue")
+    @PreAuthorize("hasRole('can-send-category-message')")
     public ResponseEntity<MessageReceived> sendCategory(@Valid @RequestBody(required = false) MessageSend messageSend) {
         if (messageSend == null) {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
@@ -47,6 +49,7 @@ public class MessageController {
 
     @PostMapping("/send-item-attribute")
     @Operation(summary = "Send item attribute message", description = "Send a message to the item attribute queue")
+    @PreAuthorize("hasRole('can-send-attribute-message')")
     public ResponseEntity<MessageReceived> sendItemAttribute(@Valid @RequestBody(required = false) MessageSend messageSend) {
         if (messageSend == null) {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);

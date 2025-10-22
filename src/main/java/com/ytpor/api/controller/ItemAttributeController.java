@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +34,7 @@ public class ItemAttributeController {
 
     @GetMapping
     @Operation(summary = "Get item attributes", description = "Retrieve a list of item attributes")
+    @PreAuthorize("hasRole('can-view-attribute')")
     public ResponseEntity<Page<ItemAttribute>> getAllItemAttributes(
             @ParameterObject @PageableDefault(size = 10, page = 0) Pageable pageable) {
         Page<ItemAttribute> itemAttributes = itemAttributeService.getAllItemAttributes(pageable);
@@ -41,6 +43,7 @@ public class ItemAttributeController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get item attribute", description = "Retrieve an item attribute")
+    @PreAuthorize("hasRole('can-view-attribute')")
     public ResponseEntity<ItemAttribute> getOneItemAttribute(@PathVariable long id) {
         return ResponseEntity.ok(itemAttributeService.getOneItemAttribute(id));
     }
@@ -48,6 +51,7 @@ public class ItemAttributeController {
     @PostMapping
     @Operation(summary = "Add item attribute", description = "Add an item attribute")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('can-create-attribute')")
     public ResponseEntity<ItemAttribute> createItemAttribute(@Valid @RequestBody(required = false) ItemAttributeCreateDTO createDTO) {
         if (createDTO == null) {
             throw new MissingRequestBodyException(REQUEST_BODY_MISSING);
@@ -57,6 +61,7 @@ public class ItemAttributeController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update item attribute", description = "Update an item attribute")
+    @PreAuthorize("hasRole('can-edit-attribute')")
     public ResponseEntity<ItemAttribute> updateItemAttribute(@PathVariable long id,
             @RequestBody(required = false) ItemAttributeUpdateDTO updateDTO) {
         if (updateDTO == null) {
@@ -68,6 +73,7 @@ public class ItemAttributeController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete item attribute", description = "Delete an item attribute")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('can-delete-attribute')")
     public ResponseEntity<Void> deleteItemAttribute(@PathVariable long id) {
         itemAttributeService.deleteItemAttribute(id);
         return ResponseEntity.noContent().build();

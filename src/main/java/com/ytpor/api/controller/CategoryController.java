@@ -27,6 +27,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,6 +61,7 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Get categories", description = "Retrieve a list of categories")
+    @PreAuthorize("hasRole('can-view-category')")
     public ResponseEntity<Page<CategoryListDTO>> getAllCategories(
             @ParameterObject @PageableDefault(size = 10, page = 0) Pageable pageable) {
         Page<CategoryListDTO> categories = categoryService.getAllCategories(pageable);
@@ -67,6 +69,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('can-view-category')")
     @Operation(summary = "Get category", description = "Retrieve a category")
     public ResponseEntity<CategoryViewDTO> getOneCategory(@PathVariable long id) {
         return ResponseEntity.ok(categoryService.getOneCategory(id));
@@ -75,6 +78,7 @@ public class CategoryController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Add category", description = "Add a category with optional file upload")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('can-create-category')")
     public ResponseEntity<CategoryViewDTO> createCategory(
         @Parameter(
             description = "Category data as JSON string",
@@ -126,6 +130,7 @@ public class CategoryController {
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Update category", description = "Update a category with optional file upload")
+    @PreAuthorize("hasRole('can-edit-category')")
     public ResponseEntity<CategoryViewDTO> updateCategory(
         @PathVariable long id,
         @Parameter(
@@ -178,6 +183,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete category", description = "Delete a category")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('can-delete-category')")
     public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();

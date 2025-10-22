@@ -16,7 +16,7 @@ RUN groupadd -r spring && \
     useradd -r -g spring spring  && \
     chown spring:spring /app
 COPY --from=builder /app/build/libs/*.jar app.jar
-EXPOSE 8080
+EXPOSE 8180
 USER spring
 ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,9 +1,8 @@
 @keycloakHost = http://{{$dotenv KC_HOST}}
 @keycloakClientId = {{$dotenv KC_CLIENT_BACKEND_ID}}
 @keycloakClientSecret = {{$dotenv KC_CLIENT_BACKEND_SECRET}}
-
 @realm = {{$dotenv KC_REALM}}
-
+@gatewayHost = http://{{$dotenv API_GATEWAY}}
 @host = http://{{$dotenv API_HOST}}
 @contentType = application/json
 @adminUsername = {{$dotenv KC_TEST_ADMIN}}
@@ -31,6 +30,20 @@ GET {{host}}/v1/category HTTP/1.1
 Authorization: Bearer {{loginAdmin.response.body.access_token}}
 
 ###
+GET {{gatewayHost}}/prod/v1/attribute?page=1&size=10
+Authorization: Bearer {{loginAdmin.response.body.access_token}}
+
+### show
+POST {{gatewayHost}}/prod/v1/message/send-category HTTP/1.1
+Authorization: Bearer {{loginAdmin.response.body.access_token}}
+Content-Type: {{contentType}}
+
+{
+    "title": "category",
+    "content": "category"
+}
+
+###
 
 # @name loginUser
 POST {{keycloakHost}}/realms/{{realm}}/protocol/openid-connect/token HTTP/1.1
@@ -41,3 +54,18 @@ grant_type=password
 &client_secret={{keycloakClientSecret}}
 &username={{username}}
 &password={{password}}
+
+###
+GET {{gatewayHost}}/prod/v1/attribute?page=1&size=10
+Authorization: Bearer {{loginUser.response.body.access_token}}
+
+### Authorization field missing
+GET {{gatewayHost}}/prod/tool/status
+
+###
+GET {{gatewayHost}}/prod/tool/status
+Authorization: Bearer {{loginUser.response.body.access_token}}
+
+###
+GET {{gatewayHost}}/public/anything
+Authorization: Bearer {{loginUser.response.body.access_token}}

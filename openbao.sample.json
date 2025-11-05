@@ -1,0 +1,29 @@
+{
+    "data": {
+        "jwt.auth.converter.principal-attribute": "email",
+        "jwt.auth.converter.resource-id": "my-springboot-client",
+        "jwt.key": "OaSC53sH/KrX6WukDiViYcEnyM/bOi7SX/ja8oJSE51UDknLOIRbCSRbtw90/R/UqnH8Ed",
+        "minio.access-key": "development",
+        "minio.secret-key": "Wjvm5lIWk4sKkEcO",
+        "minio.url": "http://minio.local:9000",
+        "rabbitmq.exchange-name": "myapp.topic.exchange",
+        "rabbitmq.queue-category": "myapp.queue-category",
+        "rabbitmq.queue-category-key": "myapp.queue-category",
+        "rabbitmq.queue-item-attribute": "myapp.queue-item-attribute",
+        "rabbitmq.queue-item-attribute-key": "myapp.queue-item-attribute",
+        "spring.data.redis.host": "redis.local",
+        "spring.data.redis.password": "KkZK8vBvYyFly6wBKK7JG3cItWRw07oh3DB3rPgXCo3sMTY8oqKqEQpuzn8RfWfZURGToLGfmQuIJt",
+        "spring.data.redis.port": "6379",
+        "spring.datasource.password": "Wjvm5lIWk4sKkEcO",
+        "spring.datasource.url": "jdbc:mysql://mysql.local:3306/member_db",
+        "spring.datasource.username": "development",
+        "spring.rabbitmq.host": "rabbitmq.local",
+        "spring.rabbitmq.password": "verysecret!",
+        "spring.rabbitmq.port": "5672",
+        "spring.rabbitmq.username": "user@user.com",
+        "spring.rabbitmq.virtual-host": "myapp.vhost",
+        "spring.security.oauth2.resourceserver.jwt.issuer-uri": "http://keycloak.local:8080/realms/my-challenge-realm",
+        "spring.security.oauth2.resourceserver.jwt.jwk-set-uri": "http://keycloak.local:8080/realms/my-challenge-realm/protocol/openid-connect/certs",
+        "weatherapi.key": "afb146329ac4444390c15840250307"
+    }
+}
